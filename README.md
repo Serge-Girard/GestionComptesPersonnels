@@ -16,7 +16,7 @@ Présenté ici ma vision du programme présenté par Patrick Premartin https://g
  - Une gestion du clavier virtuel * en cours de réalisation.
 
 En prévision
- - Passage de la liste des écritures en mode édition pour
-      a) Pointer les écritures (case à cocher).
-      b) Supprimer des écritures (bouton Delete).
+ - Passage de la liste des écritures en mode édition pour :
+     a) Pointer les écritures (case à cocher).
+     b) Supprimer des écritures (bouton Delete).
  
