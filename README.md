@@ -16,6 +16,9 @@ Présenté ici ma vision du programme présenté par Patrick Premartin https://g
  - Une gestion du clavier virtuel * en cours de réalisation.
  
  ![Capture](https://user-images.githubusercontent.com/51124639/108681611-a63db600-74ef-11eb-8dd0-9ad6b75f8dd6.PNG)
+ 
+ ![Capture_1](https://user-images.githubusercontent.com/51124639/108682007-10eef180-74f0-11eb-836b-6a6b4a2e6b7e.PNG)
+
 
 ## En prévision
  - Passage de la liste des écritures en mode édition pour :
