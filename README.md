@@ -12,6 +12,11 @@ Présenté ici ma vision du programme présenté par Patrick Premartin https://g
       
  En guise de cerises sur le gâteau 
  - Une liste avec tailles d'éléments variables (en réponse à la taille de la colonne libellé)
- - Une gestion de style (dark/light) chargés en ressource.
+ - Une gestion de style (dark/light) chargés en ressource. Quelques astuces pour les couleurs de TPath utilisés lors du changement de style
  - Une gestion du clavier virtuel * en cours de réalisation.
+
+En prévision
+ - Passage de la liste des écritures en mode édition pour
+      a) Pointer les écritures (case à cocher).
+      b) Supprimer des écritures (bouton Delete).
  
