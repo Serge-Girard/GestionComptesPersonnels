@@ -7,8 +7,8 @@ Présenté ici ma vision du programme présenté par Patrick Premartin https://g
  - Une utilisation de TListView plutôt que des TStringGrid  
  - Une double réponse au challenge posé par la structure de la table (Date texte sous la forme AAAAMMJJ et Sens écriture '+' ou '-')
    sans avoir à passer par des champs calculés : 
-      a) utilisation de la propriété customformat
-      b) utilisation de fonction SQLite (voir PFonctionSQlite.dproj)
+     1. Utilisation de la propriété customformat
+     2. utilisation de fonction SQLite (voir PFonctionSQlite.dproj)
       
  En guise de cerises sur le gâteau 
  - Une liste avec tailles d'éléments variables (en réponse à la taille de la colonne libellé)
@@ -17,6 +17,6 @@ Présenté ici ma vision du programme présenté par Patrick Premartin https://g
 
 En prévision
  - Passage de la liste des écritures en mode édition pour :
-     a) Pointer les écritures (case à cocher).
-     b) Supprimer des écritures (bouton Delete).
+     - Pointer les écritures (case à cocher).
+     - Supprimer des écritures (bouton Delete).
  
