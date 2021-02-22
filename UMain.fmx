@@ -1,0 +1,933 @@
+object FMain: TFMain
+  Left = 0
+  Top = 0
+  Caption = 'Gestion Comptes Personnels'
+  ClientHeight = 591
+  ClientWidth = 445
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnVirtualKeyboardShown = FormVirtualKeyboardShown
+  DesignerMasterStyle = 0
+  object Pages: TTabControl
+    Align = Client
+    Size.Width = 445.000000000000000000
+    Size.Height = 550.000000000000000000
+    Size.PlatformDefault = False
+    TabHeight = 49.000000000000000000
+    TabIndex = 1
+    TabOrder = 0
+    TabPosition = None
+    Sizes = (
+      445s
+      550s
+      445s
+      550s
+      445s
+      550s
+      445s
+      550s)
+    object Ecritures: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Ecritures'
+      ExplicitSize.cx = 69.000000000000000000
+      ExplicitSize.cy = 26.000000000000000000
+      object ListeEcritures: TListView
+        ItemAppearanceClassName = 'TDynamicAppearance'
+        ItemEditAppearanceClassName = 'TDynamicAppearance'
+        HeaderAppearanceClassName = 'TListHeaderObjects'
+        FooterAppearanceClassName = 'TListHeaderObjects'
+        OnUpdateObjects = ListeEcrituresUpdateObjects
+        Align = Client
+        Size.Width = 445.000000000000000000
+        Size.Height = 447.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnApplyStyleLookup = ListeEcrituresApplyStyleLookup
+        ItemAppearance.ItemHeight = 40
+        ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
+          item
+            AppearanceObjectName = 'Date'
+            AppearanceClassName = 'TTextObjectAppearance'
+            Appearance.TextAlign = Leading
+            Appearance.Width = 79.000000000000000000
+            Appearance.Height = 22.000000000000000000
+          end
+          item
+            AppearanceObjectName = 'Montant'
+            AppearanceClassName = 'TTextObjectAppearance'
+            Appearance.TextAlign = Trailing
+            Appearance.Width = 77.000000000000000000
+            Appearance.Height = 44.000000000000000000
+            Appearance.Align = Trailing
+            Appearance.PlaceOffset.X = -1.000000000000000000
+          end
+          item
+            AppearanceObjectName = 'Libelle'
+            AppearanceClassName = 'TTextObjectAppearance'
+            Appearance.TextAlign = Leading
+            Appearance.WordWrap = True
+            Appearance.Width = 343.000000000000000000
+            Appearance.Height = 23.000000000000000000
+            Appearance.VertAlign = Trailing
+            Appearance.PlaceOffset.Y = 2.000000000000000000
+          end
+          item
+            AppearanceObjectName = 'Categorie'
+            AppearanceClassName = 'TTextObjectAppearance'
+            Appearance.TextAlign = Leading
+            Appearance.Width = 287.000000000000000000
+            Appearance.Height = 20.000000000000000000
+            Appearance.PlaceOffset.X = 78.000000000000000000
+          end>
+        ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
+          item
+            AppearanceObjectName = 'Text1'
+            AppearanceClassName = 'TTextObjectAppearance'
+          end>
+        SearchVisible = True
+      end
+      object Layout2: TLayout
+        Align = Top
+        Padding.Left = 4.000000000000000000
+        Padding.Top = 4.000000000000000000
+        Padding.Right = 4.000000000000000000
+        Padding.Bottom = 4.000000000000000000
+        Size.Width = 445.000000000000000000
+        Size.Height = 41.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object ComboBox1: TComboBox
+          Align = Client
+          Items.Strings = (
+            'Compte CA'
+            'Compte CM')
+          ItemIndex = 0
+          Margins.Left = 4.000000000000000000
+          Size.Width = 352.000000000000000000
+          Size.Height = 33.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          OnClosePopup = ComboBox1ClosePopup
+        end
+        object Text1: TText
+          Align = Left
+          Position.X = 4.000000000000000000
+          Position.Y = 4.000000000000000000
+          Size.Width = 81.000000000000000000
+          Size.Height = 33.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Compte '
+          TextSettings.HorzAlign = Trailing
+        end
+      end
+      object Layout5: TLayout
+        Align = Bottom
+        Padding.Left = 10.000000000000000000
+        Padding.Top = 5.000000000000000000
+        Padding.Right = 10.000000000000000000
+        Padding.Bottom = 5.000000000000000000
+        Position.Y = 488.000000000000000000
+        Size.Width = 445.000000000000000000
+        Size.Height = 62.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object btnDepense: TButton
+          Align = Left
+          Padding.Left = 2.000000000000000000
+          Padding.Top = 2.000000000000000000
+          Padding.Right = 8.000000000000000000
+          Padding.Bottom = 2.000000000000000000
+          Position.X = 10.000000000000000000
+          Position.Y = 5.000000000000000000
+          Size.Width = 150.000000000000000000
+          Size.Height = 52.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'D'#233'pense'
+          TextSettings.HorzAlign = Trailing
+          OnClick = btnDepenseClick
+          object Button5: TButton
+            Align = Left
+            StyledSettings = [Family, Style, FontColor]
+            HitTest = False
+            Position.X = 2.000000000000000000
+            Position.Y = 2.000000000000000000
+            Size.Width = 48.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'deleteitembutton'
+            TabOrder = 3
+            Text = '-'
+            TextSettings.Font.Size = 18.000000000000000000
+          end
+        end
+        object btnRecette: TButton
+          Align = Right
+          Padding.Left = 2.000000000000000000
+          Padding.Top = 2.000000000000000000
+          Padding.Right = 4.000000000000000000
+          Padding.Bottom = 2.000000000000000000
+          Position.X = 285.000000000000000000
+          Position.Y = 5.000000000000000000
+          Size.Width = 150.000000000000000000
+          Size.Height = 52.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Recette'
+          TextSettings.HorzAlign = Trailing
+          OnClick = btnRecetteClick
+          object Button6: TButton
+            Align = Left
+            StyledSettings = [Family, Style, FontColor]
+            HitTest = False
+            Position.X = 2.000000000000000000
+            Position.Y = 2.000000000000000000
+            Size.Width = 48.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'addtoolbutton'
+            TabOrder = 3
+            Text = '+'
+            TextSettings.Font.Size = 18.000000000000000000
+          end
+        end
+      end
+    end
+    object Saisie: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = True
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Saisie'
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      object VertScrollBox3: TVertScrollBox
+        Align = Client
+        Size.Width = 445.000000000000000000
+        Size.Height = 550.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Viewport.Width = 445.000000000000000000
+        Viewport.Height = 550.000000000000000000
+        object Layout6: TLayout
+          Align = Bottom
+          Padding.Left = 10.000000000000000000
+          Padding.Top = 4.000000000000000000
+          Padding.Right = 10.000000000000000000
+          Padding.Bottom = 4.000000000000000000
+          Position.Y = 494.000000000000000000
+          Size.Width = 445.000000000000000000
+          Size.Height = 56.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object btnOk: TButton
+            Align = Left
+            Position.X = 10.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 150.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'colorpath'
+            TabOrder = 1
+            Text = 'Ok'
+            OnClick = btnOkClick
+            object OkPath: TPath
+              Align = Left
+              Data.Path = {
+                080000000000000000001041295CA341010000005C8F3240295C634101000000
+                0AD7B3407B1436410100000000001041EC516C41010000003D0A9741F6289C40
+                0100000014AEAD4152B8F6400100000000001041295CA3410300000000001041
+                295CA341}
+              Locked = True
+              HitTest = False
+              Margins.Left = 2.000000000000000000
+              Margins.Top = 2.000000000000000000
+              Margins.Bottom = 2.000000000000000000
+              Position.X = 2.000000000000000000
+              Position.Y = 2.000000000000000000
+              Size.Width = 33.000000000000000000
+              Size.Height = 44.000000000000000000
+              Size.PlatformDefault = False
+            end
+          end
+          object btnCancel: TButton
+            Align = Right
+            Position.X = 285.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 150.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            Text = 'Annuler'
+            OnClick = btnCancelClick
+            object CancelPath: TPath
+              StyleName = 'ColorPath'
+              Align = Left
+              Data.Path = {
+                240000000000000000004041000000400200000000008C410000004002000000
+                0000B0410000D040020000000000B04100004041020000000000B04100008C41
+                0200000000008C410000B04102000000000040410000B041020000000000D040
+                0000B041020000000000004000008C4102000000000000400000404102000000
+                000000400000D040020000000000D04000000040020000000000404100000040
+                000000000000404100008040020000009A992141000080400200000066660641
+                33339340020000003333E3406666B64001000000666692413333874102000000
+                66669A4100007841020000000000A041CDCC5C41020000000000A04100004041
+                020000000000A0413333F3400200000033338341000080400200000000004041
+                00008040000000003333874166669241010000006666B6403333E34002000000
+                333393406666064102000000000080409A992141020000000000804000004041
+                020000000000804033338341020000003333F3400000A0410200000000004041
+                0000A0410200000066665E410000A041020000009A99794133339B4102000000
+                3333874166669241030000003333874166669241}
+              Locked = True
+              HitTest = False
+              Margins.Left = 2.000000000000000000
+              Margins.Top = 2.000000000000000000
+              Margins.Bottom = 2.000000000000000000
+              Position.X = 2.000000000000000000
+              Position.Y = 2.000000000000000000
+              Size.Width = 33.000000000000000000
+              Size.Height = 44.000000000000000000
+              Size.PlatformDefault = False
+            end
+          end
+        end
+        object Layout8: TLayout
+          Align = Top
+          Padding.Left = 4.000000000000000000
+          Padding.Top = 4.000000000000000000
+          Padding.Right = 4.000000000000000000
+          Padding.Bottom = 4.000000000000000000
+          Size.Width = 445.000000000000000000
+          Size.Height = 41.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 4
+          object CbxCategorie: TComboBox
+            Align = Client
+            Margins.Left = 4.000000000000000000
+            Size.Width = 352.000000000000000000
+            Size.Height = 33.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            OnClosePopup = ComboBox1ClosePopup
+          end
+          object Text4: TText
+            Align = Left
+            Position.X = 4.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 81.000000000000000000
+            Size.Height = 33.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Cat'#233'gorie'
+            TextSettings.HorzAlign = Trailing
+          end
+        end
+        object LytMontant: TLayout
+          Align = Top
+          Padding.Left = 4.000000000000000000
+          Padding.Top = 4.000000000000000000
+          Padding.Right = 4.000000000000000000
+          Padding.Bottom = 4.000000000000000000
+          Position.Y = 417.000000000000000000
+          Size.Width = 445.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          object lblMontant: TText
+            Align = Left
+            Position.X = 4.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 81.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Montant'
+            TextSettings.HorzAlign = Trailing
+          end
+          object edtmontant: TNumberBox
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Left
+            TabOrder = 0
+            Cursor = crIBeam
+            Max = 100000000.000000000000000000
+            ValueType = Float
+            Position.X = 89.000000000000000000
+            Position.Y = 4.000000000000000000
+            Margins.Left = 4.000000000000000000
+            Size.Width = 120.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+          end
+        end
+        object Layout9: TLayout
+          Align = Top
+          Padding.Left = 4.000000000000000000
+          Padding.Top = 4.000000000000000000
+          Padding.Right = 4.000000000000000000
+          Padding.Bottom = 4.000000000000000000
+          Position.Y = 41.000000000000000000
+          Size.Width = 445.000000000000000000
+          Size.Height = 336.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object lblLibelle: TText
+            Align = Left
+            Position.X = 4.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 81.000000000000000000
+            Size.Height = 328.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Libell'#233
+            TextSettings.HorzAlign = Trailing
+          end
+          object edtEcriture: TMemo
+            Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+            DataDetectorTypes = []
+            Align = Client
+            Margins.Left = 4.000000000000000000
+            Size.Width = 352.000000000000000000
+            Size.Height = 328.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            Viewport.Width = 348.000000000000000000
+            Viewport.Height = 324.000000000000000000
+          end
+        end
+        object lytDate: TLayout
+          Align = Top
+          Padding.Left = 4.000000000000000000
+          Padding.Top = 4.000000000000000000
+          Padding.Right = 4.000000000000000000
+          Padding.Bottom = 4.000000000000000000
+          Position.Y = 377.000000000000000000
+          Size.Width = 445.000000000000000000
+          Size.Height = 40.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          object lblDate: TText
+            Align = Left
+            Position.X = 4.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 81.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Date'
+            TextSettings.HorzAlign = Trailing
+          end
+          object edtDateEcriture: TDateEdit
+            Date = 44246.000000000000000000
+            Align = Left
+            Margins.Left = 4.000000000000000000
+            Position.X = 89.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Width = 120.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+          end
+        end
+      end
+    end
+    object Comptes: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Comptes'
+      ExplicitSize.cx = 69.000000000000000000
+      ExplicitSize.cy = 26.000000000000000000
+      object VertScrollBox1: TVertScrollBox
+        Align = Client
+        Padding.Left = 10.000000000000000000
+        Padding.Top = 10.000000000000000000
+        Padding.Right = 10.000000000000000000
+        Size.Width = 445.000000000000000000
+        Size.Height = 550.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Viewport.Width = 445.000000000000000000
+        Viewport.Height = 550.000000000000000000
+        object lstbxComptes: TListBox
+          Align = Top
+          Margins.Top = 10.000000000000000000
+          Margins.Bottom = 10.000000000000000000
+          Position.X = 10.000000000000000000
+          Position.Y = 20.000000000000000000
+          Size.Width = 425.000000000000000000
+          Size.Height = 269.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          AlternatingRowBackground = True
+          DisableFocusEffect = True
+          ItemIndex = 0
+          ItemHeight = 40.000000000000000000
+          Items.Strings = (
+            'Compte CA'
+            'Compte CM')
+          DefaultItemStyles.ItemStyle = ''
+          DefaultItemStyles.GroupHeaderStyle = ''
+          DefaultItemStyles.GroupFooterStyle = ''
+          Viewport.Width = 421.000000000000000000
+          Viewport.Height = 265.000000000000000000
+        end
+        object Layout3: TLayout
+          Align = Top
+          Position.X = 10.000000000000000000
+          Position.Y = 299.000000000000000000
+          Size.Width = 425.000000000000000000
+          Size.Height = 131.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object BindNavigator2: TBindNavigator
+            Align = Top
+            Size.Width = 425.000000000000000000
+            Size.Height = 41.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 2
+            DataSource = BindSourceComptes
+            VisibleButtons = [nbInsert, nbDelete, nbEdit, nbPost]
+            xRadius = 4.000000000000000000
+            yRadius = 4.000000000000000000
+          end
+          object Text2: TText
+            Align = Top
+            Position.Y = 41.000000000000000000
+            Size.Width = 425.000000000000000000
+            Size.Height = 50.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Libell'#233
+            TextSettings.HorzAlign = Leading
+            TextSettings.VertAlign = Trailing
+          end
+          object edtLibelleCompte: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 4
+            Position.Y = 91.000000000000000000
+            Size.Width = 425.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+          end
+        end
+        object btnBack2: TButton
+          Align = Bottom
+          Position.X = 10.000000000000000000
+          Position.Y = 502.000000000000000000
+          Size.Width = 425.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'backtoolbutton'
+          TabOrder = 2
+          Text = 'Ecritures'
+          TextSettings.HorzAlign = Leading
+          OnClick = BackExecute
+        end
+      end
+    end
+    object Categories: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Categories'
+      ExplicitSize.cx = 69.000000000000000000
+      ExplicitSize.cy = 26.000000000000000000
+      object VertScrollBox2: TVertScrollBox
+        Align = Client
+        Padding.Left = 10.000000000000000000
+        Padding.Top = 10.000000000000000000
+        Padding.Right = 10.000000000000000000
+        Size.Width = 445.000000000000000000
+        Size.Height = 550.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Viewport.Width = 445.000000000000000000
+        Viewport.Height = 550.000000000000000000
+        object lstbxcategories: TListBox
+          Align = Top
+          Margins.Top = 10.000000000000000000
+          Margins.Bottom = 10.000000000000000000
+          Position.X = 10.000000000000000000
+          Position.Y = 20.000000000000000000
+          Size.Width = 425.000000000000000000
+          Size.Height = 269.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          AlternatingRowBackground = True
+          DisableFocusEffect = True
+          ItemHeight = 40.000000000000000000
+          DefaultItemStyles.ItemStyle = ''
+          DefaultItemStyles.GroupHeaderStyle = ''
+          DefaultItemStyles.GroupFooterStyle = ''
+          Viewport.Width = 421.000000000000000000
+          Viewport.Height = 265.000000000000000000
+        end
+        object Layout4: TLayout
+          Align = Top
+          Position.X = 10.000000000000000000
+          Position.Y = 299.000000000000000000
+          Size.Width = 425.000000000000000000
+          Size.Height = 131.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object BindNavigator4: TBindNavigator
+            Align = Top
+            Size.Width = 425.000000000000000000
+            Size.Height = 41.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 2
+            DataSource = BindSourceCategories
+            VisibleButtons = [nbInsert, nbDelete, nbEdit, nbPost]
+            xRadius = 4.000000000000000000
+            yRadius = 4.000000000000000000
+          end
+          object Text3: TText
+            Align = Top
+            Position.Y = 41.000000000000000000
+            Size.Width = 425.000000000000000000
+            Size.Height = 50.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Libell'#233
+            TextSettings.HorzAlign = Leading
+            TextSettings.VertAlign = Trailing
+          end
+          object edtLibelleCategorie: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Top
+            TabOrder = 4
+            Position.Y = 91.000000000000000000
+            Size.Width = 425.000000000000000000
+            Size.Height = 32.000000000000000000
+            Size.PlatformDefault = False
+          end
+        end
+        object BtnBack1: TButton
+          Align = Bottom
+          Position.X = 10.000000000000000000
+          Position.Y = 502.000000000000000000
+          Size.Width = 425.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'backtoolbutton'
+          TabOrder = 2
+          Text = 'Ecritures'
+          TextSettings.HorzAlign = Leading
+          OnClick = BackClick
+        end
+      end
+    end
+  end
+  object MenuBar1: TMenuBar
+    Size.Width = 445.000000000000000000
+    Size.Height = 41.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    object btnMenu: TButton
+      Align = MostLeft
+      Size.Width = 48.000000000000000000
+      Size.Height = 41.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'detailstoolbutton'
+      TabOrder = 0
+      Text = 'Menu'
+    end
+  end
+  object lytMessage: TLayout
+    Align = Contents
+    Size.Width = 472.000000000000000000
+    Size.Height = 591.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+    TabOrder = 8
+    object Rectangle1: TRectangle
+      Align = Client
+      HitTest = False
+      Opacity = 0.699999988079071000
+      Size.Width = 472.000000000000000000
+      Size.Height = 591.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object Rectangle3: TRectangle
+      Align = Center
+      HitTest = False
+      Size.Width = 370.000000000000000000
+      Size.Height = 244.000000000000000000
+      Size.PlatformDefault = False
+      object btnExitMessage: TButton
+        Position.X = 144.000000000000000000
+        Position.Y = 181.000000000000000000
+        Size.Width = 80.000000000000000000
+        Size.Height = 49.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Ok'
+        OnClick = btnExitMessageClick
+        object Rectangle2: TRectangle
+          Align = Client
+          Fill.Color = claNull
+          Locked = True
+          HitTest = False
+          Size.Width = 80.000000000000000000
+          Size.Height = 49.000000000000000000
+          Size.PlatformDefault = False
+        end
+      end
+      object TexteMessage: TText
+        HitTest = False
+        Position.X = 16.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 337.000000000000000000
+        Size.Height = 145.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Ceci est un message'
+      end
+    end
+  end
+  object StyleBook1: TStyleBook
+    Styles = <
+      item
+      end>
+    Left = 72
+    Top = 218
+  end
+  object MultiView1: TMultiView
+    MasterButton = btnMenu
+    Mode = Drawer
+    NavigationPaneOptions.CollapsedWidth = 250.000000000000000000
+    Size.Width = 265.000000000000000000
+    Size.Height = 550.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+    TabOrder = 1
+    object Layout1: TLayout
+      Align = Client
+      Size.Width = 265.000000000000000000
+      Size.Height = 550.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object btnQuit: TButton
+        Align = Top
+        ModalResult = 2
+        Margins.Left = 2.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 2.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.X = 2.000000000000000000
+        Position.Y = 105.000000000000000000
+        Size.Width = 261.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Quitter'
+        OnClick = btnQuitClick
+      end
+      object btnCategories: TButton
+        Align = Top
+        Margins.Left = 2.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 2.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.X = 2.000000000000000000
+        Position.Y = 55.000000000000000000
+        Size.Width = 261.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'Cat'#233'gories'
+        OnClick = btnCategoriesClick
+      end
+      object btnComptes: TButton
+        Align = Top
+        Margins.Left = 2.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 2.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.X = 2.000000000000000000
+        Position.Y = 5.000000000000000000
+        Size.Width = 261.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Comptes'
+        OnClick = btnComptesClick
+      end
+      object Layout7: TLayout
+        Align = Bottom
+        Position.Y = 512.000000000000000000
+        Size.Width = 265.000000000000000000
+        Size.Height = 38.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        object SwitchStyle: TSwitch
+          Align = Left
+          IsChecked = False
+          Margins.Left = 10.000000000000000000
+          Margins.Top = 8.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Margins.Bottom = 8.000000000000000000
+          Position.X = 90.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          OnSwitch = SwitchStyleSwitch
+        end
+        object Text5: TText
+          Align = Left
+          Size.Width = 80.000000000000000000
+          Size.Height = 38.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Light mode'
+          TextSettings.HorzAlign = Trailing
+        end
+        object Text6: TText
+          Align = Client
+          Size.Width = 121.000000000000000000
+          Size.Height = 38.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Dark mode'
+          TextSettings.HorzAlign = Leading
+        end
+      end
+    end
+  end
+  object BindSourceEcritures: TBindSourceDB
+    DataSet = DM.FDQEcritures
+    ScopeMappings = <>
+    Left = 384
+    Top = 272
+  end
+  object BindingsList1: TBindingsList
+    Methods = <>
+    OutputConverters = <>
+    Left = 372
+    Top = 341
+    object LinkListControlToField1: TLinkListControlToField
+      Category = 'Liaisons rapides'
+      DataSource = BindSourceEcritures
+      Control = ListeEcritures
+      FillExpressions = <
+        item
+          SourceMemberName = 'montant'
+          ControlMemberName = 'Montant'
+          CustomFormat = 
+            'IfThen(dataset.sens.text='#39'+'#39',Format('#39'%%m'#39',dataset.montant.asCurr' +
+            'ency),Format('#39'%%m'#39',dataset.montant.asCurrency*-1))'
+        end
+        item
+          SourceMemberName = 'libelle'
+          ControlMemberName = 'Libelle'
+        end
+        item
+          SourceMemberName = 'date'
+          ControlMemberName = 'Date'
+          CustomFormat = 
+            'SubString(DataSet.Date.Text,6,2)+'#39'/'#39'+SubString(DataSet.Date.Text' +
+            ',4,2)+'#39'/'#39'+SubString(DataSet.Date.Text,2,2)'
+        end
+        item
+          SourceMemberName = 'Categorie'
+          ControlMemberName = 'Categorie'
+        end>
+      FillHeaderExpressions = <>
+      FillBreakGroups = <>
+    end
+    object LinkListControlToField2: TLinkListControlToField
+      Category = 'Liaisons rapides'
+      DataSource = BindSourceComptes
+      FieldName = 'libelle'
+      Control = ComboBox1
+      FillExpressions = <>
+      FillHeaderExpressions = <>
+      FillBreakGroups = <>
+    end
+    object LinkListControlToField4: TLinkListControlToField
+      Category = 'Liaisons rapides'
+      DataSource = BindSourceComptes
+      FieldName = 'libelle'
+      Control = lstbxComptes
+      FillExpressions = <>
+      FillHeaderExpressions = <>
+      FillBreakGroups = <>
+    end
+    object LinkControlToField1: TLinkControlToField
+      Category = 'Liaisons rapides'
+      DataSource = BindSourceComptes
+      FieldName = 'libelle'
+      Control = edtLibelleCompte
+      Track = False
+    end
+    object LinkListControlToField3: TLinkListControlToField
+      Category = 'Liaisons rapides'
+      DataSource = BindSourceCategories
+      FieldName = 'libelle'
+      Control = lstbxcategories
+      FillExpressions = <>
+      FillHeaderExpressions = <>
+      FillBreakGroups = <>
+    end
+    object LinkListControlToField5: TLinkListControlToField
+      Category = 'Liaisons rapides'
+      DataSource = BindSourceCategories
+      FieldName = 'libelle'
+      Control = CbxCategorie
+      FillExpressions = <>
+      FillHeaderExpressions = <>
+      FillBreakGroups = <>
+    end
+    object LinkControlToField2: TLinkControlToField
+      Category = 'Liaisons rapides'
+      DataSource = BindSourceCategories
+      FieldName = 'libelle'
+      Control = edtLibelleCategorie
+      Track = False
+    end
+  end
+  object BindSourceComptes: TBindSourceDB
+    DataSet = DM.tblComptes
+    ScopeMappings = <>
+    Left = 312
+    Top = 392
+  end
+  object BindSourceCategories: TBindSourceDB
+    DataSet = DM.tblCategories
+    ScopeMappings = <>
+    Left = 216
+    Top = 392
+  end
+  object ActionList1: TActionList
+    Left = 274
+    Top = 269
+    object FileExit1: TFileExit
+      Category = 'Fichier'
+      Hint = 'Quitter|Quitte l'#39'application'
+      ImageIndex = 43
+      OnCanActionExec = FileExit1CanActionExec
+      ImageIndex = 43
+    end
+  end
+end

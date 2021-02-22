@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2021/02/20 16:06:04.000.447,=D:\serge\Documents\Embarcadero\Studio\Projets\Sidney\Unit11.pas</Transaction>
+    <Transaction>2021/02/20 16:24:50.000.695,D:\serge\Documents\Embarcadero\Studio\Projets\Sidney\Unit11.pas=D:\Test\Test\UFonctionSQlite.pas</Transaction>
+    <Transaction>2021/02/20 16:24:50.000.695,D:\serge\Documents\Embarcadero\Studio\Projets\Sidney\Unit11.fmx=D:\Test\Test\UFonctionSQlite.fmx</Transaction>
+    <Transaction>2021/02/20 16:25:09.000.461,D:\serge\Documents\Embarcadero\Studio\Projets\Sidney\Project9.dproj=D:\Test\Test\PFonctionSQLite.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

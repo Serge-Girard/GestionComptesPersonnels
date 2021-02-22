@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{20D63D6A-68F0-48A3-A851-C4EF3D1EB1ED}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="ComptesPerso.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="PFonctionSQLite.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="ComptesPerso">
+        <MSBuild Projects="ComptesPerso.dproj"/>
+    </Target>
+    <Target Name="ComptesPerso:Clean">
+        <MSBuild Projects="ComptesPerso.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ComptesPerso:Make">
+        <MSBuild Projects="ComptesPerso.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="PFonctionSQLite">
+        <MSBuild Projects="PFonctionSQLite.dproj"/>
+    </Target>
+    <Target Name="PFonctionSQLite:Clean">
+        <MSBuild Projects="PFonctionSQLite.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="PFonctionSQLite:Make">
+        <MSBuild Projects="PFonctionSQLite.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="ComptesPerso;PFonctionSQLite"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="ComptesPerso:Clean;PFonctionSQLite:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="ComptesPerso:Make;PFonctionSQLite:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

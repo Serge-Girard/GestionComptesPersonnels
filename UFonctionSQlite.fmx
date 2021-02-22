@@ -1,0 +1,181 @@
+object Form11: TForm11
+  Left = 0
+  Top = 0
+  Caption = 'Utilisation de fonctions SQLite'
+  ClientHeight = 379
+  ClientWidth = 657
+  Padding.Left = 4.000000000000000000
+  Padding.Top = 4.000000000000000000
+  Padding.Right = 4.000000000000000000
+  Padding.Bottom = 4.000000000000000000
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object Grid1: TGrid
+    Align = Client
+    CanFocus = True
+    ClipChildren = True
+    Margins.Top = 4.000000000000000000
+    Size.Width = 649.000000000000000000
+    Size.Height = 202.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+    RowCount = 0
+    Viewport.Width = 645.000000000000000000
+    Viewport.Height = 177.000000000000000000
+  end
+  object Memo1: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    DataDetectorTypes = []
+    Lines.Strings = (
+      'SELECT Date,Todate(Date) "Fdate::DATE",'
+      
+        '            sens,Montant,ToMontant(sens,Montant) "FMontant::Curr' +
+        'ency" '
+      'from ecritures')
+    ReadOnly = True
+    Align = Top
+    Position.X = 4.000000000000000000
+    Position.Y = 54.000000000000000000
+    Size.Width = 649.000000000000000000
+    Size.Height = 65.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 8
+    Viewport.Width = 645.000000000000000000
+    Viewport.Height = 61.000000000000000000
+  end
+  object Text1: TText
+    Align = Top
+    Position.X = 4.000000000000000000
+    Position.Y = 4.000000000000000000
+    Size.Width = 649.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    Text = 
+      'Comment ajouter des fonctions '#224' SQLite pour '#233'viter les onCalcFie' +
+      'lds'
+  end
+  object Layout1: TLayout
+    Align = Bottom
+    Position.X = 4.000000000000000000
+    Position.Y = 325.000000000000000000
+    Size.Width = 649.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 16
+    object Label1: TLabel
+      Position.X = 8.000000000000000000
+      Position.Y = 8.000000000000000000
+      Text = 'Total'
+      TabOrder = 0
+    end
+    object Total: TText
+      Position.X = 352.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 137.000000000000000000
+      Size.Height = 33.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Total Calcul'#233
+      TextSettings.HorzAlign = Trailing
+    end
+    object Label2: TLabel
+      Position.X = 8.000000000000000000
+      Position.Y = 24.000000000000000000
+      Size.Width = 329.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = #39'SELECT SUM(ToMontant(sens,Montant)) FROM ECRITURES'#39
+      TabOrder = 2
+    end
+  end
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'Database=D:\Test\Test\madb.sdb'
+      'DriverID=SQLite')
+    ConnectedStoredUsage = [auDesignTime]
+    LoginPrompt = False
+    Left = 40
+    Top = 256
+  end
+  object FDQuery1: TFDQuery
+    ActiveStoredUsage = [auDesignTime]
+    Connection = FDConnection1
+    SQL.Strings = (
+      
+        'SELECT Date,Todate(Date) "Fdate::DATE",sens,Montant,ToMontant(se' +
+        'ns,Montant) "FMontant::Currency" from ecritures')
+    Left = 280
+    Top = 256
+  end
+  object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
+    OnDriverCreated = FDPhysSQLiteDriverLink1DriverCreated
+    Left = 160
+    Top = 256
+  end
+  object FDSQLiteFunctionToMontant: TFDSQLiteFunction
+    DriverLink = FDPhysSQLiteDriverLink1
+    Active = True
+    FunctionName = 'ToMontant'
+    ArgumentsCount = 2
+    OnCalculate = FDSQLiteFunctionToMontantCalculate
+    Left = 400
+    Top = 256
+  end
+  object FDSQLiteFunctionToDate: TFDSQLiteFunction
+    DriverLink = FDPhysSQLiteDriverLink1
+    Active = True
+    FunctionName = 'ToDate'
+    ArgumentsCount = 1
+    OnCalculate = FDSQLiteFunctionToDateCalculate
+    Left = 560
+    Top = 256
+  end
+  object BindSourceDB1: TBindSourceDB
+    DataSet = FDQuery1
+    ScopeMappings = <>
+    Left = 192
+    Top = 192
+  end
+  object BindingsList1: TBindingsList
+    Methods = <>
+    OutputConverters = <>
+    Left = 92
+    Top = 189
+    object LinkGridToDataSourceBindSourceDB1: TLinkGridToDataSource
+      Category = 'Liaisons rapides'
+      DataSource = BindSourceDB1
+      GridControl = Grid1
+      Columns = <
+        item
+          MemberName = 'date'
+          Header = 'Date AAAAMMJJ'
+          Width = 100
+        end
+        item
+          MemberName = 'Fdate'
+          Header = 'Fonction ToDate'
+          Width = 100
+          ColumnStyle = 'DateColumn'
+        end
+        item
+          MemberName = 'sens'
+          Header = 'Sens'
+          Width = 40
+        end
+        item
+          MemberName = 'montant'
+          Header = 'Montant Absolu'
+          Width = 100
+          ColumnStyle = 'CurrencyColumn'
+        end
+        item
+          MemberName = 'FMontant'
+          Header = 'Fonction ToMontant'
+          Width = 150
+          ColumnStyle = 'CurrencyColumn'
+        end>
+    end
+  end
+end
