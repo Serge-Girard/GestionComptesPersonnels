@@ -34,6 +34,7 @@ type
     procedure FDQEcrituresCalcFields(DataSet: TDataSet);
     procedure DataModuleCreate(Sender: TObject);
     procedure FDCnxcomptesBeforeConnect(Sender: TObject);
+    procedure tblCategoriesAfterPost(DataSet: TDataSet);
   private
     { Déclarations privées }
   public
@@ -117,6 +118,11 @@ begin
  if Ainputs[0].AsString='-'
     then AOutput.AsInteger:=-1
     else AOutput.AsInteger:=1;
+end;
+
+procedure TDM.tblCategoriesAfterPost(DataSet: TDataSet);
+begin
+FDQEcritures.Open('');
 end;
 
 end.

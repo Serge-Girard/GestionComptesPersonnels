@@ -41,11 +41,11 @@ type
     lstbxComptes: TListBox;
     LinkListControlToField4: TLinkListControlToField;
     BindNavigator2: TBindNavigator;
-    VertScrollBox1: TVertScrollBox;
+    VScrollCompte: TVertScrollBox;
     Text2: TText;
     edtLibelleCompte: TEdit;
     LinkControlToField1: TLinkControlToField;
-    VertScrollBox2: TVertScrollBox;
+    VScrollCategorie: TVertScrollBox;
     lstbxcategories: TListBox;
     Layout4: TLayout;
     BindNavigator4: TBindNavigator;
@@ -61,7 +61,7 @@ type
     Button5: TButton;
     Button6: TButton;
     Saisie: TTabItem;
-    VertScrollBox3: TVertScrollBox;
+    Vscrollecriture: TVertScrollBox;
     Layout6: TLayout;
     btnOk: TButton;
     btnCancel: TButton;
@@ -111,13 +111,18 @@ type
     procedure FormVirtualKeyboardShown(Sender: TObject;
       KeyboardVisible: Boolean; const Bounds: TRect);
     procedure SwitchStyleSwitch(Sender: TObject);
-    procedure ListeEcrituresApplyStyleLookup(Sender: TObject);
     procedure ListeEcrituresUpdateObjects(const Sender: TObject;
       const AItem: TListViewItem);
+    procedure CalcContentBounds(Sender: TObject;
+      var ContentBounds: TRectF);
+    procedure FormVirtualKeyboardHidden(Sender: TObject;
+      KeyboardVisible: Boolean; const Bounds: TRect);
   private
     { Déclarations privées }
-    mouvement : tmouvement;
+    Mouvement : TMouvement;
     LightStyle, DarkStyle : String;
+    LargeurDispo : Single;
+    TopLibelleItem : integer;
     FKBBounds: TRectF;                  // for Vert scroll box
     FNeedOffset: Boolean;               // for Vert scroll box
     procedure MessageErreur(Texte : String);
@@ -134,11 +139,45 @@ implementation
 
 {$R *.fmx}
 
-uses system.StrUtils,
+uses system.StrUtils, System.Math,
      FMX.Styles,FMX.Styles.Objects,
      FMX.VirtualKeyboard,
-     FMX.TextLayout,
-     FMX.SearchBox;
+     FMX.ListView.DynamicAppearance, FMX.TextLayout,FMX.SearchBox;
+
+
+ function GetTextHeight(const D: TListItemText; const Width: single; const Text: string): Integer;
+    var  Layout: TTextLayout;
+         Hauteur : Single;
+    begin
+      // Creer un TTextLayout pour obtenir les dimennsions du texte
+      Layout := TTextLayoutManager.DefaultTextLayout.Create;
+      try
+        Layout.BeginUpdate;
+        try
+          // Initialieer le layout parameters avec ceux de l'élément (style)
+          Layout.Font.Assign(D.Font);
+          Layout.VerticalAlign := D.TextVertAlign;
+          Layout.HorizontalAlign := D.TextAlign;
+          Layout.WordWrap := D.WordWrap;
+          Layout.Trimming := D.Trimming;
+          Layout.MaxSize := TPointF.Create(Width, TTextLayout.MaxLayoutSize.Y);
+          Layout.Text := Text;
+        finally
+          Layout.EndUpdate;
+        end;
+        // nécessite un single
+        Hauteur:=Layout.Height;
+        // petit gap supplémentaire, la hauteur d'un 'm'
+        if D.Wordwrap then begin
+          Layout.Text := 'm';
+          Hauteur:=Hauteur+Layout.Height;
+        end;
+        Result := Round(Hauteur);
+      finally
+        Layout.Free;
+      end;
+    end;
+
 
 // todo : listview passage en mode édition pour ajout suppression
 // todo : listview ajouter checkbox pour écriture rapprochée
@@ -229,7 +268,6 @@ end;
 procedure TFMain.CacherClavier(aScrollBox : TScrollBox);
 begin
   aScrollBox.ViewportPosition := PointF(aScrollBox.ViewportPosition.X, 0);
-//  loMain.Align := TAlignLayout.Client;
   aScrollBox.RealignContent;
 end;
 
@@ -310,10 +348,36 @@ if ListeEcritures.controls[1].ClassType = TSearchBox then
 
 end;
 
+procedure TFMain.FormVirtualKeyboardHidden(Sender: TObject;
+  KeyboardVisible: Boolean; const Bounds: TRect);
+var vScrollBox : TScrollBox;
+begin
+ case Pages.Tabindex of
+   1 : vScrollBox:= TScrollBox(VScrollEcriture);
+   2 : vScrollBox:= TScrollBox(VScrollCompte);
+   3 : vScrollBox:= TScrollBox(VScrollCategorie);
+   else exit;
+ end;
+
+FKBBounds.Create(0, 0, 0, 0);
+FNeedOffset := False;
+CacherClavier(vScrollBox);
+
+end;
+
 procedure TFMain.FormVirtualKeyboardShown(Sender: TObject;
   KeyboardVisible: Boolean; const Bounds: TRect);
+var vScrollBox : TScrollBox;
 begin
+ case Pages.Tabindex of
+   1 : vScrollBox:= TScrollBox(VScrollEcriture);
+   2 : vScrollBox:= TScrollBox(VScrollCompte);
+   3 : vScrollBox:= TScrollBox(VScrollCategorie);
+   else exit;
+ end;
+
 // todo : gestion clavier
+
 
 // hide
 // FKBBounds.Create(0, 0, 0, 0);
@@ -324,133 +388,35 @@ begin
  FKBBounds := TRectF.Create(Bounds);
  FKBBounds.TopLeft := ScreenToClient(FKBBounds.TopLeft);
  FKBBounds.BottomRight := ScreenToClient(FKBBounds.BottomRight);
- MontrerClavier(TScrollBox(VertScrollBox1));
-end;
-
-
-procedure TFMain.ListeEcrituresApplyStyleLookup(Sender: TObject);
-var item: TListBoxItem absolute Sender;
-begin
+ MontrerClavier(vScrollBox);
 end;
 
 procedure TFMain.ListeEcrituresUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
 // todo  billet
 var
-  Element: TListItemText;
-  Texte: string;
-  LargeurDispo, PositionDebut: Single;
-  LargeurMontant : Single;
-
-  function GetTextHeight(const D: TListItemText; const Width: single; const Text: string): Integer;
-    var  Layout: TTextLayout;
-         Hauteur : Single;
-    begin
-      // Creer un TTextLayout pour obtenir les dimennsions du texte
-      Layout := TTextLayoutManager.DefaultTextLayout.Create;
-      try
-        Layout.BeginUpdate;
-        try
-          // Initialieer le layout parameters avec ceux de l'élément (style)
-          Layout.Font.Assign(D.Font);
-          Layout.VerticalAlign := D.TextVertAlign;
-          Layout.HorizontalAlign := D.TextAlign;
-          Layout.WordWrap := D.WordWrap;
-          Layout.Trimming := D.Trimming;
-          Layout.MaxSize := TPointF.Create(Width, TTextLayout.MaxLayoutSize.Y);
-          Layout.Text := Text;
-        finally
-          Layout.EndUpdate;
-        end;
-        // nécessite un single
-        Hauteur:=Layout.Height;
-        // petit gap supplémentaire, la hauteur d'un 'm'
-        Layout.Text := 'm';
-        Hauteur:=Hauteur+Layout.Height;
-        Result := Round(Hauteur);
-      finally
-        Layout.Free;
-      end;
-    end;
-
+  Element: TListItemDrawable;
+  PositionDebut, LargeurMontant, LargeurCheck : Single;
+  Hauteur : Integer;
 begin
-LargeurMontant:=TListItemText(AItem.View.FindDrawable('Montant')).Width;
-PositionDebut:=TListItemText(AItem.View.FindDrawable('Categorie')).Height;
-LargeurDispo:=TListView(Sender).Width - TListView(Sender).ItemSpaces.Left
-             - TListView(Sender).ItemSpaces.Right - LargeurMontant;
+ Element:=AItem.View.FindDrawable('verifie');
+ // todo : rapprochement
+ TListItemAccessory(Element).Visible:=False;
+ LargeurCheck:=Element.Width;
+ Element:=AItem.View.FindDrawable('Montant');
+ LargeurCheck:=Element.Width;
+ LargeurDispo:=ListeEcritures.Width - ListeEcritures.ItemSpaces.Left
+               - ListeEcritures.ItemSpaces.Right - LargeurMontant
+               - LargeurCheck;
 
-Element:=TListItemText(AItem.View.FindDrawable('Libelle'));
-Texte:=Element.Text;
-
-AItem.Height := GetTextHeight(Element, LargeurDispo, Texte) + Trunc(PositionDebut);
-Element.Height := AItem.Height;
-Element.Width := LargeurDispo;
+ Element:=AItem.View.FindDrawable('Libelle');
+ PositionDebut:=Element.PlaceOffset.Y;
+ Hauteur:=GetTextHeight(TListItemText(Element), LargeurDispo, TListItemText(Element).Text);
+ AItem.Height := Hauteur + Ceil(PositionDebut);
+ Element.Height:= Hauteur ;
+ Element.Width := LargeurDispo;
 end;
 
-
-
-{
-  FKBBounds: TRectF;                  // for Vert scroll box
-  FNeedOffset: Boolean;               // for Vert scroll box
-
-procedure TfMain.RestorePosition;
-// for Vert scroll box
-begin
-//  Self.vsboxMain.ViewportPosition := PointF(Self.vsboxMain.ViewportPosition.X, 0);
-  VertScrollBox1.ViewportPosition := PointF(VertScrollBox1.ViewportPosition.X, 0);
-//  Self.loutMain.Align := TAlignLayout.Client;
-  loMain.Align := TAlignLayout.Client;
-//  Self.vsboxMain.RealignContent;
-  VertScrollBox1.RealignContent;
-end;
-
-procedure TfMain.UpdateKBBounds;
-// for Vert scroll box
-var
-  LFocused : TControl;
-  LFocusRect: TRectF;
-begin
-  FNeedOffset := False;
-  if Assigned(Focused) then
-  begin
-    LFocused := TControl(Focused.GetObject);
-    LFocusRect := LFocused.AbsoluteRect;
-//    LFocusRect.Offset(Self.vsboxMain.ViewportPosition);
-    LFocusRect.Offset(VertScrollBox1.ViewportPosition);
-    if (LFocusRect.IntersectsWith(TRectF.Create(FKBBounds))) and
-       (LFocusRect.Bottom > FKBBounds.Top) then
-    begin
-      FNeedOffset := True;
-//      Self.loutMain.Align := TAlignLayout.Horizontal;
-      loMain.Align := TAlignLayout.Horizontal;
-//      Self.vsboxMain.RealignContent;
-      VertScrollBox1.RealignContent;
-      Application.ProcessMessages;
-//      Self.vsboxMain.ViewportPosition :=
-//        PointF(Self.vsboxMain.ViewportPosition.X,
-//               LFocusRect.Bottom - FKBBounds.Top);
-      VertScrollBox1 .ViewportPosition :=
-        PointF(VertScrollBox1.ViewportPosition.X,
-               LFocusRect.Bottom - FKBBounds.Top);
-    end;
-  end;
-  if not FNeedOffset then
-    RestorePosition;
-end;
-
-procedure TfMain.VertScrollBox1CalcContentBounds(Sender: TObject;
-  var ContentBounds: TRectF);
-// for Vert scroll box
-begin
-  if FNeedOffset and (FKBBounds.Top > 0) then
-  begin
-    ContentBounds.Bottom := Max(ContentBounds.Bottom,
-                                2 * ClientHeight - FKBBounds.Top);
-  end;
-end;
-
-
-}
 
 procedure TFMain.MessageErreur(Texte: String);
 begin
@@ -479,5 +445,15 @@ CancelPath.Fill.Color:=vColor;
 OkPath.Fill.Color:=vColor;
 end;
 
+
+procedure TFMain.CalcContentBounds(Sender: TObject;
+  var ContentBounds: TRectF);
+begin
+  if FNeedOffset and (FKBBounds.Top > 0) then
+  begin
+    ContentBounds.Bottom := Max(ContentBounds.Bottom,
+                                2 * ClientHeight - FKBBounds.Top);
+  end;
+end;
 
 end.

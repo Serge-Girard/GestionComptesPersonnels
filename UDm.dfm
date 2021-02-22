@@ -97,6 +97,7 @@ object DM: TDM
   end
   object tblCategories: TFDTable
     ActiveStoredUsage = [auDesignTime]
+    AfterPost = tblCategoriesAfterPost
     IndexFieldNames = 'libelle'
     Connection = FDCnxcomptes
     UpdateOptions.UpdateTableName = 'categories'

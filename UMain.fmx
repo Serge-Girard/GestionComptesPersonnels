@@ -9,6 +9,7 @@ object FMain: TFMain
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
   OnVirtualKeyboardShown = FormVirtualKeyboardShown
+  OnVirtualKeyboardHidden = FormVirtualKeyboardHidden
   DesignerMasterStyle = 0
   object Pages: TTabControl
     Align = Client
@@ -16,7 +17,7 @@ object FMain: TFMain
     Size.Height = 550.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 1
+    TabIndex = 2
     TabOrder = 0
     TabPosition = None
     Sizes = (
@@ -52,21 +53,23 @@ object FMain: TFMain
         Size.Height = 447.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
-        OnApplyStyleLookup = ListeEcrituresApplyStyleLookup
         ItemAppearance.ItemHeight = 40
         ItemAppearanceObjects.ItemObjects.ObjectsCollection = <
           item
             AppearanceObjectName = 'Date'
             AppearanceClassName = 'TTextObjectAppearance'
+            Appearance.Font.StyleExt = {00070000000000000004000000}
             Appearance.TextAlign = Leading
-            Appearance.Width = 79.000000000000000000
-            Appearance.Height = 22.000000000000000000
+            Appearance.Width = 88.000000000000000000
+            Appearance.Height = 20.000000000000000000
+            Appearance.PlaceOffset.X = 31.000000000000000000
           end
           item
             AppearanceObjectName = 'Montant'
             AppearanceClassName = 'TTextObjectAppearance'
             Appearance.TextAlign = Trailing
-            Appearance.Width = 77.000000000000000000
+            Appearance.TextVertAlign = Leading
+            Appearance.Width = 97.000000000000000000
             Appearance.Height = 44.000000000000000000
             Appearance.Align = Trailing
             Appearance.PlaceOffset.X = -1.000000000000000000
@@ -76,24 +79,33 @@ object FMain: TFMain
             AppearanceClassName = 'TTextObjectAppearance'
             Appearance.TextAlign = Leading
             Appearance.WordWrap = True
-            Appearance.Width = 343.000000000000000000
-            Appearance.Height = 23.000000000000000000
-            Appearance.VertAlign = Trailing
-            Appearance.PlaceOffset.Y = 2.000000000000000000
+            Appearance.Width = 297.000000000000000000
+            Appearance.Height = 21.000000000000000000
+            Appearance.PlaceOffset.X = 30.000000000000000000
+            Appearance.PlaceOffset.Y = 21.000000000000000000
           end
           item
             AppearanceObjectName = 'Categorie'
             AppearanceClassName = 'TTextObjectAppearance'
             Appearance.TextAlign = Leading
-            Appearance.Width = 287.000000000000000000
+            Appearance.Width = 206.000000000000000000
             Appearance.Height = 20.000000000000000000
-            Appearance.PlaceOffset.X = 78.000000000000000000
+            Appearance.PlaceOffset.X = 120.000000000000000000
+          end
+          item
+            AppearanceObjectName = 'verifie'
+            AppearanceClassName = 'TAccessoryObjectAppearance'
+            Appearance.AccessoryType = Checkmark
+            Appearance.Width = 29.000000000000000000
+            Appearance.VertAlign = Trailing
           end>
         ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
           item
             AppearanceObjectName = 'Text1'
             AppearanceClassName = 'TTextObjectAppearance'
           end>
+        ItemAppearanceObjects.FooterObjects.Text.Width = 408.000000000000000000
+        ItemAppearanceObjects.FooterObjects.Text.Height = 32.000000000000000000
         SearchVisible = True
       end
       object Layout2: TLayout
@@ -207,7 +219,7 @@ object FMain: TFMain
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -216,12 +228,13 @@ object FMain: TFMain
       Text = 'Saisie'
       ExplicitSize.cx = 8.000000000000000000
       ExplicitSize.cy = 8.000000000000000000
-      object VertScrollBox3: TVertScrollBox
+      object Vscrollecriture: TVertScrollBox
         Align = Client
         Size.Width = 445.000000000000000000
         Size.Height = 550.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
+        OnCalcContentBounds = CalcContentBounds
         Viewport.Width = 445.000000000000000000
         Viewport.Height = 550.000000000000000000
         object Layout6: TLayout
@@ -445,7 +458,7 @@ object FMain: TFMain
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -454,7 +467,7 @@ object FMain: TFMain
       Text = 'Comptes'
       ExplicitSize.cx = 69.000000000000000000
       ExplicitSize.cy = 26.000000000000000000
-      object VertScrollBox1: TVertScrollBox
+      object VScrollCompte: TVertScrollBox
         Align = Client
         Padding.Left = 10.000000000000000000
         Padding.Top = 10.000000000000000000
@@ -463,6 +476,7 @@ object FMain: TFMain
         Size.Height = 550.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
+        OnCalcContentBounds = CalcContentBounds
         Viewport.Width = 445.000000000000000000
         Viewport.Height = 550.000000000000000000
         object lstbxComptes: TListBox
@@ -497,7 +511,8 @@ object FMain: TFMain
           Size.PlatformDefault = False
           TabOrder = 1
           object BindNavigator2: TBindNavigator
-            Align = Top
+            Align = Bottom
+            Position.Y = 90.000000000000000000
             Size.Width = 425.000000000000000000
             Size.Height = 41.000000000000000000
             Size.PlatformDefault = False
@@ -509,7 +524,6 @@ object FMain: TFMain
           end
           object Text2: TText
             Align = Top
-            Position.Y = 41.000000000000000000
             Size.Width = 425.000000000000000000
             Size.Height = 50.000000000000000000
             Size.PlatformDefault = False
@@ -521,7 +535,7 @@ object FMain: TFMain
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Top
             TabOrder = 4
-            Position.Y = 91.000000000000000000
+            Position.Y = 50.000000000000000000
             Size.Width = 425.000000000000000000
             Size.Height = 32.000000000000000000
             Size.PlatformDefault = False
@@ -555,7 +569,7 @@ object FMain: TFMain
       Text = 'Categories'
       ExplicitSize.cx = 69.000000000000000000
       ExplicitSize.cy = 26.000000000000000000
-      object VertScrollBox2: TVertScrollBox
+      object VScrollCategorie: TVertScrollBox
         Align = Client
         Padding.Left = 10.000000000000000000
         Padding.Top = 10.000000000000000000
@@ -564,6 +578,7 @@ object FMain: TFMain
         Size.Height = 550.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
+        OnCalcContentBounds = CalcContentBounds
         Viewport.Width = 445.000000000000000000
         Viewport.Height = 550.000000000000000000
         object lstbxcategories: TListBox
@@ -594,7 +609,7 @@ object FMain: TFMain
           Size.PlatformDefault = False
           TabOrder = 1
           object BindNavigator4: TBindNavigator
-            Align = Top
+            Align = Center
             Size.Width = 425.000000000000000000
             Size.Height = 41.000000000000000000
             Size.PlatformDefault = False
@@ -606,9 +621,8 @@ object FMain: TFMain
           end
           object Text3: TText
             Align = Top
-            Position.Y = 41.000000000000000000
             Size.Width = 425.000000000000000000
-            Size.Height = 50.000000000000000000
+            Size.Height = 33.000000000000000000
             Size.PlatformDefault = False
             Text = 'Libell'#233
             TextSettings.HorzAlign = Leading
@@ -618,7 +632,7 @@ object FMain: TFMain
             Touch.InteractiveGestures = [LongTap, DoubleTap]
             Align = Top
             TabOrder = 4
-            Position.Y = 91.000000000000000000
+            Position.Y = 33.000000000000000000
             Size.Width = 425.000000000000000000
             Size.Height = 32.000000000000000000
             Size.PlatformDefault = False
