@@ -10,12 +10,14 @@ Présenté ici ma vision du programme présenté par Patrick Premartin https://g
      - Utilisation de la propriété customformat.
      - Utilisation de fonction SQLite (voir PFonctionSQlite.dproj).
       
- En guise de cerises sur le gâteau 
+ ## En guise de cerises sur le gâteau 
  - Une liste avec tailles d'éléments variables (en réponse à la taille de la colonne libellé)
  - Une gestion de style (dark/light) chargés en ressource. Quelques astuces pour les couleurs de TPath utilisés lors du changement de style
  - Une gestion du clavier virtuel * en cours de réalisation.
+ 
+ ![Capture](https://user-images.githubusercontent.com/51124639/108681611-a63db600-74ef-11eb-8dd0-9ad6b75f8dd6.PNG)
 
-En prévision
+## En prévision
  - Passage de la liste des écritures en mode édition pour :
      - Pointer les écritures (case à cocher).
      - Supprimer des écritures (bouton Delete).
