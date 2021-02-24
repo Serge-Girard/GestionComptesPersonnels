@@ -32,28 +32,20 @@ type
     Layout2: TLayout;
     BindSourceEcritures: TBindSourceDB;
     BindingsList1: TBindingsList;
-    LinkListControlToField1: TLinkListControlToField;
     BindSourceComptes: TBindSourceDB;
     ComboBox1: TComboBox;
     LinkListControlToField2: TLinkListControlToField;
-    Text1: TText;
+    lblcompte: TLabel;
     Layout3: TLayout;
     lstbxComptes: TListBox;
     LinkListControlToField4: TLinkListControlToField;
     BindNavigator2: TBindNavigator;
     VScrollCompte: TVertScrollBox;
-    Text2: TText;
-    edtLibelleCompte: TEdit;
-    LinkControlToField1: TLinkControlToField;
     VScrollCategorie: TVertScrollBox;
     lstbxcategories: TListBox;
     Layout4: TLayout;
-    BindNavigator4: TBindNavigator;
-    Text3: TText;
-    edtLibelleCategorie: TEdit;
     BindSourceCategories: TBindSourceDB;
     LinkListControlToField3: TLinkListControlToField;
-    BtnBack1: TButton;
     btnBack2: TButton;
     Layout5: TLayout;
     btnDepense: TButton;
@@ -67,17 +59,16 @@ type
     btnCancel: TButton;
     Layout8: TLayout;
     CbxCategorie: TComboBox;
-    Text4: TText;
+    lblCategorie: TLabel;
     LytMontant: TLayout;
-    lblMontant: TText;
+    lblMontant: TLabel;
     Layout9: TLayout;
-    lblLibelle: TText;
+    lblLibelle: TLabel;
     lytDate: TLayout;
-    lblDate: TText;
+    lblDate: TLabel;
     edtDateEcriture: TDateEdit;
     edtmontant: TNumberBox;
     LinkListControlToField5: TLinkListControlToField;
-    LinkControlToField2: TLinkControlToField;
     OkPath: TPath;
     CancelPath: TPath;
     lytMessage: TLayout;
@@ -94,6 +85,18 @@ type
     Text5: TText;
     Text6: TText;
     StyleBook1: TStyleBook;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    edtLibelleCompte: TEdit;
+    Label4: TLabel;
+    edtLibelleCateg: TEdit;
+    LinkControlToField3: TLinkControlToField;
+    Layout10: TLayout;
+    Layout11: TLayout;
+    Button1: TButton;
+    BindNavigator1: TBindNavigator;
+    LinkListControlToField1: TLinkListControlToField;
     procedure btnQuitClick(Sender: TObject);
     procedure btnCategoriesClick(Sender: TObject);
     procedure btnComptesClick(Sender: TObject);
@@ -117,6 +120,10 @@ type
       var ContentBounds: TRectF);
     procedure FormVirtualKeyboardHidden(Sender: TObject;
       KeyboardVisible: Boolean; const Bounds: TRect);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure ListeEcrituresItemClick(const Sender: TObject;
+      const AItem: TListViewItem);
   private
     { Déclarations privées }
     Mouvement : TMouvement;
@@ -179,9 +186,7 @@ uses system.StrUtils, System.Math,
     end;
 
 
-// todo : listview passage en mode édition pour ajout suppression
-// todo : listview ajouter checkbox pour écriture rapprochée
-
+// todo : listview passage en mode édition pour ajout suppression /checkbox
 
 procedure TFMain.BackExecute(Sender: TObject);
 begin
@@ -229,12 +234,25 @@ if edtEcriture.Lines.Text.IsEmpty then
    edtEcriture.SetFocus;
    Exit;
   end;
+
 if edtmontant.Value=0 then
  begin
    messageErreur('Montant doit être supérieur à Zéro');
    edtMontant.SetFocus;
    exit;
  end;
+
+{
+// contrôle taille edtEcritures
+// inutile si maxlength est indiqué
+if edtEcriture.Lines.Text.Length>DM.FDQEcritures.FieldByName('libelle').Size then
+  begin
+   edtEcriture.Lines.Text:=edtEcriture.Lines.Text.Substring(1,DM.FDQEcritures.FieldByName('libelle').Size);
+   messageErreur('un libellé tronqué taille max dépassée');
+   edtEcriture.SetFocus;
+  end;
+}
+
 dm.AjoutEcriture(edtEcriture.Lines.Text,
                  IfThen(mouvement=depense,'-','+'),
                  FormatDateTime('yyyymmdd',edtDateEcriture.Date),
@@ -272,7 +290,6 @@ begin
 end;
 
 procedure TFMain.MontrerClavier(aScrollBox : TScrollBox);
-// for Vert scroll box
 var
   LFocused : TControl;
   LFocusRect: TRectF;
@@ -282,20 +299,13 @@ begin
   begin
     LFocused := TControl(Focused.GetObject);
     LFocusRect := LFocused.AbsoluteRect;
-//    LFocusRect.Offset(Self.vsboxMain.ViewportPosition);
     LFocusRect.Offset(aScrollBox.ViewportPosition);
     if (LFocusRect.IntersectsWith(TRectF.Create(FKBBounds))) and
        (LFocusRect.Bottom > FKBBounds.Top) then
     begin
       FNeedOffset := True;
-//      Self.loutMain.Align := TAlignLayout.Horizontal;
-//      loMain.Align := TAlignLayout.Horizontal;
-//      Self.vsboxMain.RealignContent;
       aScrollBox.RealignContent;
       Application.ProcessMessages;
-//      Self.vsboxMain.ViewportPosition :=
-//        PointF(Self.vsboxMain.ViewportPosition.X,
-//               LFocusRect.Bottom - FKBBounds.Top);
       aScrollBox .ViewportPosition :=
         PointF(aScrollBox.ViewportPosition.X,
                LFocusRect.Bottom - FKBBounds.Top);
@@ -307,6 +317,16 @@ end;
 procedure TFMain.ComboBox1ClosePopup(Sender: TObject);
 begin
  Dm.FDQEcritures.Open('',[dm.tblComptes.FieldByName('id').asInteger]);
+{$IFDEF ANDROID}
+{TODO : à tester
+ permettrai (en théorie) de forcer le dessin de la ListView
+ pour régler le problème de hauteur d'item variable
+ force un redraw ?
+ sinon essayer switchstyle}
+ListeEcritures.BeginUpdate;
+ListeEcritures.EndUpdate;
+
+{$ENDIF}
 end;
 
 procedure TFMain.FileExit1CanActionExec(Sender: TCustomAction;
@@ -348,6 +368,19 @@ if ListeEcritures.controls[1].ClassType = TSearchBox then
 
 end;
 
+procedure TFMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+  Shift: TShiftState);
+begin
+// todo : gestion mobile ? vérifier que vkhardwareback est supporté utile ?
+if (key=vkHardwareBack) AND (Pages.TabIndex>0) then
+ begin
+   // permet d'utiliser la touche hardware de retour
+   Pages.First();
+   Key:=0;
+ end;
+
+end;
+
 procedure TFMain.FormVirtualKeyboardHidden(Sender: TObject;
   KeyboardVisible: Boolean; const Bounds: TRect);
 var vScrollBox : TScrollBox;
@@ -375,34 +408,36 @@ begin
    3 : vScrollBox:= TScrollBox(VScrollCategorie);
    else exit;
  end;
-
-// todo : gestion clavier
-
-
-// hide
-// FKBBounds.Create(0, 0, 0, 0);
-//  FNeedOffset := False;
-//  RestorePosition;
-
-// show
  FKBBounds := TRectF.Create(Bounds);
  FKBBounds.TopLeft := ScreenToClient(FKBBounds.TopLeft);
  FKBBounds.BottomRight := ScreenToClient(FKBBounds.BottomRight);
  MontrerClavier(vScrollBox);
 end;
 
+procedure TFMain.ListeEcrituresItemClick(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+ DM.EcritureValidee(DM.FDQEcritures.FieldByName('id').asInteger);
+end;
+
 procedure TFMain.ListeEcrituresUpdateObjects(const Sender: TObject;
   const AItem: TListViewItem);
-// todo  billet
+// todo  billet sur les hauteurs variables d'items de liste
 var
   Element: TListItemDrawable;
   PositionDebut, LargeurMontant, LargeurCheck : Single;
   Hauteur : Integer;
+  Coche : String;
 begin
- Element:=AItem.View.FindDrawable('verifie');
- // todo : rapprochement
- TListItemAccessory(Element).Visible:=False;
- LargeurCheck:=Element.Width;
+ if AItem.Purpose<>TListItemPurpose.None then exit;
+
+ Element:=AItem.View.FindDrawable('Text6');
+ Coche:=TListItemText(Element).Text;
+
+ Element:=AItem.View.FindDrawable('Verifie');
+ TListItemAccessory(Element).Visible:=SameText(Coche,'True');
+
+ if assigned(element) then  LargeurCheck:=Element.Width else LargeurCheck:=0;
  Element:=AItem.View.FindDrawable('Montant');
  LargeurCheck:=Element.Width;
  LargeurDispo:=ListeEcritures.Width - ListeEcritures.ItemSpaces.Left
