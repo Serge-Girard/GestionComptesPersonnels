@@ -14,7 +14,7 @@ Présenté ici ma vision du programme présenté par Patrick Premartin https://g
  - Une liste avec tailles d'éléments variables (en réponse à la taille de la colonne libellé) * petit bogue avec Android
  - Une gestion de style (dark/light) chargés en ressource. Quelques astuces pour les couleurs de TPath utilisés lors du changement de style.
  
- * il faut que les styles soient disponibles sur votre PC (Cooper.Win.Style, CooperDark.Win.Style téléchargeable via Getit) 
+ &#9888; il faut que les styles soient disponibles sur votre PC (Cooper.Win.Style, CooperDark.Win.Style téléchargeable via Getit) 
  ![Capture](https://user-images.githubusercontent.com/51124639/108956176-9fd64800-766f-11eb-8e7a-1483434448f2.PNG)
  
  - Une gestion du clavier virtuel.
