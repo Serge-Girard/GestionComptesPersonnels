@@ -26,6 +26,10 @@ Présenté ici ma vision du programme présenté par Patrick Premartin https://g
  ![Capture](https://user-images.githubusercontent.com/51124639/108702844-16f1cc00-750a-11eb-8029-edbc6196be63.PNG)
  
  ![Capture_1](https://user-images.githubusercontent.com/51124639/108702851-19ecbc80-750a-11eb-9111-309f4b39d0d7.PNG)
+ 
+## version 2 
+  - ajout d'un pointage des écritures
+  - gestion de version de la base de données (utilisation de PRAGMA user_version)
 
 ## En prévision
  - Passage de la liste des écritures en mode édition pour :
