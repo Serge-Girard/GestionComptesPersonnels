@@ -8,6 +8,7 @@ object FMain: TFMain
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
+  OnKeyUp = FormKeyUp
   OnVirtualKeyboardShown = FormVirtualKeyboardShown
   OnVirtualKeyboardHidden = FormVirtualKeyboardHidden
   DesignerMasterStyle = 0
@@ -17,7 +18,7 @@ object FMain: TFMain
     Size.Height = 550.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 2
+    TabIndex = 0
     TabOrder = 0
     TabPosition = None
     Sizes = (
@@ -33,7 +34,7 @@ object FMain: TFMain
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -70,19 +71,18 @@ object FMain: TFMain
             Appearance.TextAlign = Trailing
             Appearance.TextVertAlign = Leading
             Appearance.Width = 97.000000000000000000
-            Appearance.Height = 44.000000000000000000
             Appearance.Align = Trailing
-            Appearance.PlaceOffset.X = -1.000000000000000000
           end
           item
             AppearanceObjectName = 'Libelle'
             AppearanceClassName = 'TTextObjectAppearance'
+            Appearance.Font.Size = 18.000000000000000000
             Appearance.TextAlign = Leading
             Appearance.WordWrap = True
             Appearance.Width = 297.000000000000000000
             Appearance.Height = 21.000000000000000000
             Appearance.PlaceOffset.X = 30.000000000000000000
-            Appearance.PlaceOffset.Y = 21.000000000000000000
+            Appearance.PlaceOffset.Y = 20.000000000000000000
           end
           item
             AppearanceObjectName = 'Categorie'
@@ -93,19 +93,21 @@ object FMain: TFMain
             Appearance.PlaceOffset.X = 120.000000000000000000
           end
           item
-            AppearanceObjectName = 'verifie'
+            AppearanceObjectName = 'Verifie'
             AppearanceClassName = 'TAccessoryObjectAppearance'
             Appearance.AccessoryType = Checkmark
-            Appearance.Width = 29.000000000000000000
-            Appearance.VertAlign = Trailing
-          end>
-        ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <
+            Appearance.Width = 30.000000000000000000
+          end
           item
-            AppearanceObjectName = 'Text1'
+            AppearanceObjectName = 'ValeurVerif'
             AppearanceClassName = 'TTextObjectAppearance'
+            Appearance.Visible = False
           end>
+        ItemAppearanceObjects.ItemEditObjects.ObjectsCollection = <>
         ItemAppearanceObjects.FooterObjects.Text.Width = 408.000000000000000000
         ItemAppearanceObjects.FooterObjects.Text.Height = 32.000000000000000000
+        StyleLookup = 'ListeEcrituresStyle1'
+        OnItemClick = ListeEcrituresItemClick
         SearchVisible = True
       end
       object Layout2: TLayout
@@ -120,10 +122,6 @@ object FMain: TFMain
         TabOrder = 1
         object ComboBox1: TComboBox
           Align = Client
-          Items.Strings = (
-            'Compte CA'
-            'Compte CM')
-          ItemIndex = 0
           Margins.Left = 4.000000000000000000
           Size.Width = 352.000000000000000000
           Size.Height = 33.000000000000000000
@@ -131,15 +129,16 @@ object FMain: TFMain
           TabOrder = 0
           OnClosePopup = ComboBox1ClosePopup
         end
-        object Text1: TText
+        object lblcompte: TLabel
           Align = Left
           Position.X = 4.000000000000000000
           Position.Y = 4.000000000000000000
           Size.Width = 81.000000000000000000
           Size.Height = 33.000000000000000000
           Size.PlatformDefault = False
-          Text = 'Compte '
+          StyleLookup = 'lblcompteStyle1'
           TextSettings.HorzAlign = Trailing
+          Text = 'Compte'
         end
       end
       object Layout5: TLayout
@@ -174,7 +173,7 @@ object FMain: TFMain
             HitTest = False
             Position.X = 2.000000000000000000
             Position.Y = 2.000000000000000000
-            Size.Width = 48.000000000000000000
+            Size.Width = 26.000000000000000000
             Size.Height = 48.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'deleteitembutton'
@@ -204,7 +203,7 @@ object FMain: TFMain
             HitTest = False
             Position.X = 2.000000000000000000
             Position.Y = 2.000000000000000000
-            Size.Width = 48.000000000000000000
+            Size.Width = 44.000000000000000000
             Size.Height = 48.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'addtoolbutton'
@@ -338,15 +337,15 @@ object FMain: TFMain
             TabOrder = 0
             OnClosePopup = ComboBox1ClosePopup
           end
-          object Text4: TText
+          object lblCategorie: TLabel
             Align = Left
             Position.X = 4.000000000000000000
             Position.Y = 4.000000000000000000
             Size.Width = 81.000000000000000000
             Size.Height = 33.000000000000000000
             Size.PlatformDefault = False
-            Text = 'Cat'#233'gorie'
             TextSettings.HorzAlign = Trailing
+            Text = 'Cat'#233'gorie'
           end
         end
         object LytMontant: TLayout
@@ -360,15 +359,15 @@ object FMain: TFMain
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 3
-          object lblMontant: TText
+          object lblMontant: TLabel
             Align = Left
             Position.X = 4.000000000000000000
             Position.Y = 4.000000000000000000
             Size.Width = 81.000000000000000000
             Size.Height = 32.000000000000000000
             Size.PlatformDefault = False
-            Text = 'Montant'
             TextSettings.HorzAlign = Trailing
+            Text = 'Montant'
           end
           object edtmontant: TNumberBox
             Touch.InteractiveGestures = [LongTap, DoubleTap]
@@ -377,6 +376,7 @@ object FMain: TFMain
             Cursor = crIBeam
             Max = 100000000.000000000000000000
             ValueType = Float
+            KeyboardType = NumbersAndPunctuation
             Position.X = 89.000000000000000000
             Position.Y = 4.000000000000000000
             Margins.Left = 4.000000000000000000
@@ -396,19 +396,20 @@ object FMain: TFMain
           Size.Height = 336.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
-          object lblLibelle: TText
+          object lblLibelle: TLabel
             Align = Left
             Position.X = 4.000000000000000000
             Position.Y = 4.000000000000000000
             Size.Width = 81.000000000000000000
             Size.Height = 328.000000000000000000
             Size.PlatformDefault = False
-            Text = 'Libell'#233
             TextSettings.HorzAlign = Trailing
+            Text = 'Libell'#233
           end
           object edtEcriture: TMemo
             Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
             DataDetectorTypes = []
+            MaxLength = 255
             Align = Client
             Margins.Left = 4.000000000000000000
             Size.Width = 352.000000000000000000
@@ -430,15 +431,15 @@ object FMain: TFMain
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
-          object lblDate: TText
+          object lblDate: TLabel
             Align = Left
             Position.X = 4.000000000000000000
             Position.Y = 4.000000000000000000
             Size.Width = 81.000000000000000000
             Size.Height = 32.000000000000000000
             Size.PlatformDefault = False
-            Text = 'Date'
             TextSettings.HorzAlign = Trailing
+            Text = 'Date'
           end
           object edtDateEcriture: TDateEdit
             Date = 44246.000000000000000000
@@ -458,7 +459,7 @@ object FMain: TFMain
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -484,18 +485,14 @@ object FMain: TFMain
           Margins.Top = 10.000000000000000000
           Margins.Bottom = 10.000000000000000000
           Position.X = 10.000000000000000000
-          Position.Y = 20.000000000000000000
+          Position.Y = 43.000000000000000000
           Size.Width = 425.000000000000000000
           Size.Height = 269.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
           AlternatingRowBackground = True
           DisableFocusEffect = True
-          ItemIndex = 0
           ItemHeight = 40.000000000000000000
-          Items.Strings = (
-            'Compte CA'
-            'Compte CM')
           DefaultItemStyles.ItemStyle = ''
           DefaultItemStyles.GroupHeaderStyle = ''
           DefaultItemStyles.GroupFooterStyle = ''
@@ -505,16 +502,67 @@ object FMain: TFMain
         object Layout3: TLayout
           Align = Top
           Position.X = 10.000000000000000000
-          Position.Y = 299.000000000000000000
+          Position.Y = 322.000000000000000000
           Size.Width = 425.000000000000000000
-          Size.Height = 131.000000000000000000
+          Size.Height = 95.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
-          object BindNavigator2: TBindNavigator
+          object Label3: TLabel
             Align = Bottom
-            Position.Y = 90.000000000000000000
+            Position.Y = 48.000000000000000000
             Size.Width = 425.000000000000000000
-            Size.Height = 41.000000000000000000
+            Size.Height = 17.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Libell'#233
+            TabOrder = 4
+          end
+          object edtLibelleCompte: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Bottom
+            TabOrder = 3
+            Position.Y = 65.000000000000000000
+            Size.Width = 425.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+          end
+        end
+        object Label2: TLabel
+          Align = Top
+          StyledSettings = [Family, FontColor]
+          Position.X = 10.000000000000000000
+          Position.Y = 10.000000000000000000
+          Size.Width = 425.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 18.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.HorzAlign = Center
+          Text = 'Comptes'
+          TabOrder = 2
+        end
+        object Layout10: TLayout
+          Align = MostBottom
+          Padding.Bottom = 4.000000000000000000
+          Position.X = 10.000000000000000000
+          Position.Y = 500.000000000000000000
+          Size.Width = 425.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          object btnBack2: TButton
+            Align = MostLeft
+            Size.Width = 48.000000000000000000
+            Size.Height = 46.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'backtoolbutton'
+            TabOrder = 3
+            TextSettings.HorzAlign = Leading
+            OnClick = BackClick
+          end
+          object BindNavigator2: TBindNavigator
+            Align = Client
+            Size.Width = 377.000000000000000000
+            Size.Height = 46.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 2
             DataSource = BindSourceComptes
@@ -522,37 +570,6 @@ object FMain: TFMain
             xRadius = 4.000000000000000000
             yRadius = 4.000000000000000000
           end
-          object Text2: TText
-            Align = Top
-            Size.Width = 425.000000000000000000
-            Size.Height = 50.000000000000000000
-            Size.PlatformDefault = False
-            Text = 'Libell'#233
-            TextSettings.HorzAlign = Leading
-            TextSettings.VertAlign = Trailing
-          end
-          object edtLibelleCompte: TEdit
-            Touch.InteractiveGestures = [LongTap, DoubleTap]
-            Align = Top
-            TabOrder = 4
-            Position.Y = 50.000000000000000000
-            Size.Width = 425.000000000000000000
-            Size.Height = 32.000000000000000000
-            Size.PlatformDefault = False
-          end
-        end
-        object btnBack2: TButton
-          Align = Bottom
-          Position.X = 10.000000000000000000
-          Position.Y = 502.000000000000000000
-          Size.Width = 425.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = 'backtoolbutton'
-          TabOrder = 2
-          Text = 'Ecritures'
-          TextSettings.HorzAlign = Leading
-          OnClick = BackExecute
         end
       end
     end
@@ -586,7 +603,7 @@ object FMain: TFMain
           Margins.Top = 10.000000000000000000
           Margins.Bottom = 10.000000000000000000
           Position.X = 10.000000000000000000
-          Position.Y = 20.000000000000000000
+          Position.Y = 43.000000000000000000
           Size.Width = 425.000000000000000000
           Size.Height = 269.000000000000000000
           Size.PlatformDefault = False
@@ -603,15 +620,67 @@ object FMain: TFMain
         object Layout4: TLayout
           Align = Top
           Position.X = 10.000000000000000000
-          Position.Y = 299.000000000000000000
+          Position.Y = 322.000000000000000000
           Size.Width = 425.000000000000000000
-          Size.Height = 131.000000000000000000
+          Size.Height = 87.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
-          object BindNavigator4: TBindNavigator
-            Align = Center
+          object Label4: TLabel
+            Align = Bottom
+            Position.Y = 40.000000000000000000
             Size.Width = 425.000000000000000000
-            Size.Height = 41.000000000000000000
+            Size.Height = 17.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Libell'#233
+            TabOrder = 4
+          end
+          object edtLibelleCateg: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Bottom
+            TabOrder = 3
+            Position.Y = 57.000000000000000000
+            Size.Width = 425.000000000000000000
+            Size.Height = 30.000000000000000000
+            Size.PlatformDefault = False
+          end
+        end
+        object Label1: TLabel
+          Align = Top
+          StyledSettings = [Family, FontColor]
+          Position.X = 10.000000000000000000
+          Position.Y = 10.000000000000000000
+          Size.Width = 425.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 18.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.HorzAlign = Center
+          Text = 'Cat'#233'gories'
+          TabOrder = 3
+        end
+        object Layout11: TLayout
+          Align = MostBottom
+          Padding.Bottom = 4.000000000000000000
+          Position.X = 10.000000000000000000
+          Position.Y = 500.000000000000000000
+          Size.Width = 425.000000000000000000
+          Size.Height = 50.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          object Button1: TButton
+            Align = MostLeft
+            Size.Width = 48.000000000000000000
+            Size.Height = 46.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'backtoolbutton'
+            TabOrder = 3
+            TextSettings.HorzAlign = Leading
+            OnClick = BackClick
+          end
+          object BindNavigator1: TBindNavigator
+            Align = Client
+            Size.Width = 377.000000000000000000
+            Size.Height = 46.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 2
             DataSource = BindSourceCategories
@@ -619,37 +688,6 @@ object FMain: TFMain
             xRadius = 4.000000000000000000
             yRadius = 4.000000000000000000
           end
-          object Text3: TText
-            Align = Top
-            Size.Width = 425.000000000000000000
-            Size.Height = 33.000000000000000000
-            Size.PlatformDefault = False
-            Text = 'Libell'#233
-            TextSettings.HorzAlign = Leading
-            TextSettings.VertAlign = Trailing
-          end
-          object edtLibelleCategorie: TEdit
-            Touch.InteractiveGestures = [LongTap, DoubleTap]
-            Align = Top
-            TabOrder = 4
-            Position.Y = 33.000000000000000000
-            Size.Width = 425.000000000000000000
-            Size.Height = 32.000000000000000000
-            Size.PlatformDefault = False
-          end
-        end
-        object BtnBack1: TButton
-          Align = Bottom
-          Position.X = 10.000000000000000000
-          Position.Y = 502.000000000000000000
-          Size.Width = 425.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = 'backtoolbutton'
-          TabOrder = 2
-          Text = 'Ecritures'
-          TextSettings.HorzAlign = Leading
-          OnClick = BackClick
         end
       end
     end
@@ -661,7 +699,7 @@ object FMain: TFMain
     TabOrder = 2
     object btnMenu: TButton
       Align = MostLeft
-      Size.Width = 48.000000000000000000
+      Size.Width = 44.000000000000000000
       Size.Height = 41.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'detailstoolbutton'
@@ -719,13 +757,6 @@ object FMain: TFMain
         Text = 'Ceci est un message'
       end
     end
-  end
-  object StyleBook1: TStyleBook
-    Styles = <
-      item
-      end>
-    Left = 72
-    Top = 218
   end
   object MultiView1: TMultiView
     MasterButton = btnMenu
@@ -804,72 +835,56 @@ object FMain: TFMain
           Margins.Bottom = 8.000000000000000000
           Position.X = 90.000000000000000000
           Position.Y = 8.000000000000000000
-          Size.Width = 44.000000000000000000
+          Size.Width = 55.000000000000000000
           Size.Height = 22.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
           OnSwitch = SwitchStyleSwitch
         end
-        object Text5: TText
+        object bllLight: TLabel
           Align = Left
+          HitTest = True
           Size.Width = 80.000000000000000000
           Size.Height = 38.000000000000000000
           Size.PlatformDefault = False
-          Text = 'Light mode'
           TextSettings.HorzAlign = Trailing
+          Text = 'Light mode'
+          OnClick = bllLightClick
         end
-        object Text6: TText
+        object lblDark: TLabel
           Align = Client
-          Size.Width = 121.000000000000000000
+          HitTest = True
+          Size.Width = 110.000000000000000000
           Size.Height = 38.000000000000000000
           Size.PlatformDefault = False
           Text = 'Dark mode'
-          TextSettings.HorzAlign = Leading
+          OnClick = lblDarkClick
         end
+      end
+      object lblVersion: TLabel
+        Align = Bottom
+        Position.Y = 472.000000000000000000
+        Size.Width = 265.000000000000000000
+        Size.Height = 40.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'listboxitemlabel'
+        TextSettings.HorzAlign = Center
+        Text = 'Version '
+        TabOrder = 4
       end
     end
   end
   object BindSourceEcritures: TBindSourceDB
     DataSet = DM.FDQEcritures
     ScopeMappings = <>
-    Left = 384
-    Top = 272
+    Left = 344
+    Top = 192
   end
   object BindingsList1: TBindingsList
     Methods = <>
     OutputConverters = <>
     Left = 372
-    Top = 341
-    object LinkListControlToField1: TLinkListControlToField
-      Category = 'Liaisons rapides'
-      DataSource = BindSourceEcritures
-      Control = ListeEcritures
-      FillExpressions = <
-        item
-          SourceMemberName = 'montant'
-          ControlMemberName = 'Montant'
-          CustomFormat = 
-            'IfThen(dataset.sens.text='#39'+'#39',Format('#39'%%m'#39',dataset.montant.asCurr' +
-            'ency),Format('#39'%%m'#39',dataset.montant.asCurrency*-1))'
-        end
-        item
-          SourceMemberName = 'libelle'
-          ControlMemberName = 'Libelle'
-        end
-        item
-          SourceMemberName = 'date'
-          ControlMemberName = 'Date'
-          CustomFormat = 
-            'SubString(DataSet.Date.Text,6,2)+'#39'/'#39'+SubString(DataSet.Date.Text' +
-            ',4,2)+'#39'/'#39'+SubString(DataSet.Date.Text,2,2)'
-        end
-        item
-          SourceMemberName = 'Categorie'
-          ControlMemberName = 'Categorie'
-        end>
-      FillHeaderExpressions = <>
-      FillBreakGroups = <>
-    end
+    Top = 277
     object LinkListControlToField2: TLinkListControlToField
       Category = 'Liaisons rapides'
       DataSource = BindSourceComptes
@@ -887,13 +902,6 @@ object FMain: TFMain
       FillExpressions = <>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
-    end
-    object LinkControlToField1: TLinkControlToField
-      Category = 'Liaisons rapides'
-      DataSource = BindSourceComptes
-      FieldName = 'libelle'
-      Control = edtLibelleCompte
-      Track = False
     end
     object LinkListControlToField3: TLinkListControlToField
       Category = 'Liaisons rapides'
@@ -913,29 +921,65 @@ object FMain: TFMain
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
-    object LinkControlToField2: TLinkControlToField
+    object LinkControlToField3: TLinkControlToField
       Category = 'Liaisons rapides'
       DataSource = BindSourceCategories
       FieldName = 'libelle'
-      Control = edtLibelleCategorie
+      Control = edtLibelleCateg
       Track = False
+    end
+    object LinkListControlToField1: TLinkListControlToField
+      Category = 'Liaisons rapides'
+      DataSource = BindSourceEcritures
+      Control = ListeEcritures
+      FillExpressions = <
+        item
+          SourceMemberName = 'date'
+          ControlMemberName = 'Date'
+          CustomFormat = 
+            'SubString(DataSet.Date.Text,6,2)+'#39'/'#39'+SubString(DataSet.Date.Text' +
+            ',4,2)+'#39'/'#39'+SubString(DataSet.Date.Text,2,2)'
+        end
+        item
+          SourceMemberName = 'montant'
+          ControlMemberName = 'Montant'
+          CustomFormat = 
+            'IfThen(Dataset.sens.asString='#39'+'#39',Format('#39'%%m'#39',Dataset.Montant.as' +
+            'Currency*1),Format('#39'%%m'#39',Dataset.Montant.asCurrency*-1))'
+        end
+        item
+          SourceMemberName = 'libelle'
+          ControlMemberName = 'Libelle'
+        end
+        item
+          SourceMemberName = 'Categorie'
+          ControlMemberName = 'Categorie'
+        end
+        item
+          SourceMemberName = 'verifie'
+          ControlMemberName = 'ValeurVerif'
+        end>
+      FillHeaderExpressions = <>
+      FillBreakGroups = <>
     end
   end
   object BindSourceComptes: TBindSourceDB
+    DataSource.AutoEdit = False
     DataSet = DM.tblComptes
     ScopeMappings = <>
-    Left = 312
-    Top = 392
+    Left = 296
+    Top = 344
   end
   object BindSourceCategories: TBindSourceDB
+    DataSource.AutoEdit = False
     DataSet = DM.tblCategories
     ScopeMappings = <>
-    Left = 216
-    Top = 392
+    Left = 176
+    Top = 312
   end
   object ActionList1: TActionList
-    Left = 274
-    Top = 269
+    Left = 234
+    Top = 205
     object FileExit1: TFileExit
       Category = 'Fichier'
       Hint = 'Quitter|Quitte l'#39'application'

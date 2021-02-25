@@ -82,9 +82,8 @@ type
     edtEcriture: TMemo;
     SwitchStyle: TSwitch;
     Layout7: TLayout;
-    Text5: TText;
-    Text6: TText;
-    StyleBook1: TStyleBook;
+    bllLight: TLabel;
+    lblDark: TLabel;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -97,6 +96,7 @@ type
     Button1: TButton;
     BindNavigator1: TBindNavigator;
     LinkListControlToField1: TLinkListControlToField;
+    lblVersion: TLabel;
     procedure btnQuitClick(Sender: TObject);
     procedure btnCategoriesClick(Sender: TObject);
     procedure btnComptesClick(Sender: TObject);
@@ -124,12 +124,13 @@ type
       Shift: TShiftState);
     procedure ListeEcrituresItemClick(const Sender: TObject;
       const AItem: TListViewItem);
+    procedure bllLightClick(Sender: TObject);
+    procedure lblDarkClick(Sender: TObject);
   private
     { Déclarations privées }
     Mouvement : TMouvement;
     LightStyle, DarkStyle : String;
     LargeurDispo : Single;
-    TopLibelleItem : integer;
     FKBBounds: TRectF;                  // for Vert scroll box
     FNeedOffset: Boolean;               // for Vert scroll box
     procedure MessageErreur(Texte : String);
@@ -137,6 +138,7 @@ type
     procedure CacherClavier(aScrollBox : TScrollBox);
   public
     { Déclarations publiques }
+    ListViewFont : TFont;
   end;
 
 var
@@ -151,18 +153,27 @@ uses system.StrUtils, System.Math,
      FMX.VirtualKeyboard,
      FMX.ListView.DynamicAppearance, FMX.TextLayout,FMX.SearchBox;
 
-
+{$REGION 'Calcul taille variable d''un item de TListview'}
+ // todo : à mettre dans une unité à part (réutilisation)
  function GetTextHeight(const D: TListItemText; const Width: single; const Text: string): Integer;
     var  Layout: TTextLayout;
          Hauteur : Single;
+         vFont : TFont;
     begin
-      // Creer un TTextLayout pour obtenir les dimennsions du texte
+      // Creer un TTextLayout pour obtenir les dimensions du texte
       Layout := TTextLayoutManager.DefaultTextLayout.Create;
       try
         Layout.BeginUpdate;
         try
-          // Initialieer le layout parameters avec ceux de l'élément (style)
+          // Initialiser le layout parameters avec ceux de l'élément (style)
           Layout.Font.Assign(D.Font);
+{$IFDEF ANDROID}
+// bogue android, la taille de fonte par défaut (18) n'est pas toujours trouvée !
+// à tester
+          if D.Font.IsSizeStored=false then  Layout.Font.Size:=18; // D.Font.DefaultSize;
+
+//          if (D.Font=12) OR (D.Font=18) then   Layout.Font.Size:=18;
+{$ENDIF}
           Layout.VerticalAlign := D.TextVertAlign;
           Layout.HorizontalAlign := D.TextAlign;
           Layout.WordWrap := D.WordWrap;
@@ -184,7 +195,7 @@ uses system.StrUtils, System.Math,
         Layout.Free;
       end;
     end;
-
+{$ENDREGION}
 
 // todo : listview passage en mode édition pour ajout suppression /checkbox
 
@@ -283,6 +294,154 @@ begin
 lytMessage.Visible:=False;
 end;
 
+procedure TFMain.ComboBox1ClosePopup(Sender: TObject);
+begin
+ Dm.FDQEcritures.Open('',[dm.tblComptes.FieldByName('id').asInteger]);
+end;
+
+procedure TFMain.FileExit1CanActionExec(Sender: TCustomAction;
+  var CanExec: Boolean);
+begin
+CanExec:=true;
+Close;
+end;
+
+procedure TFMain.FormCreate(Sender: TObject);
+begin
+{$REGION 'Question de "Style"'}
+{Les styles sont chargés à partir de ressources,
+ des styles .fsf sont conseillés }
+
+{$IFDEF MSWINDOWS}
+ LightStyle:='windowslight';
+ DarkStyle:='windowsdark';
+{$ENDIF}
+{$IFDEF ANDROID}
+ LightStyle:='androidlight';
+ DarkStyle:='androiddark';
+{$ENDIF}
+// application style
+SwitchStyleSwitch(Sender);
+{$ENDREGION}
+
+lblVersion.Text:=dm.StringVersion;
+// todo : menu apple
+Dm.FDQEcritures.Open('',[dm.tblComptes.FieldByName('id').asInteger]);
+Pages.TabIndex:=0;
+{$REGION 'Barre de recherche'}
+// https://www.developpez.net/forums/blogs/138527-sergiomaster/b6927/fmx-modifier-hauteur-accessoirement-dautres-proprietes-boite-recherche-liste/
+if ListeEcritures.controls[1].ClassType = TSearchBox then
+  begin
+    // hauteur
+    if TSearchBox(ListeEcritures.controls[1]).Height<30 then // certains styles ou cibles proposent une hauteur plus importante
+      TSearchBox(ListeEcritures.controls[1]).Height:=30;
+  end;
+{$ENDREGION}
+end;
+
+procedure TFMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+  Shift: TShiftState);
+begin
+// todo : gestion mobile ? vérifier que vkhardwareback est supporté utile ?
+if (key=vkHardwareBack) AND (Pages.TabIndex>0) then
+ begin
+   // permet d'utiliser la touche hardware de retour
+   Pages.First();
+   Key:=0;
+ end;
+
+end;
+
+procedure TFMain.lblDarkClick(Sender: TObject);
+begin
+SwitchStyle.IsChecked:=True;
+end;
+
+
+{$REGION 'Gestion affichage,click item de ListeEcritures'}
+procedure TFMain.ListeEcrituresItemClick(const Sender: TObject;
+  const AItem: TListViewItem);
+begin
+ DM.EcritureValidee(DM.FDQEcritures.FieldByName('id').asInteger);
+end;
+
+procedure TFMain.ListeEcrituresUpdateObjects(const Sender: TObject;
+  const AItem: TListViewItem);
+// todo  billet sur les hauteurs variables d'items de liste
+var
+  Element: TListItemDrawable;
+  PositionDebut, LargeurMontant, LargeurCheck : Single;
+  Hauteur : Integer;
+  Coche : String;
+begin
+
+ if AItem.Purpose<>TListItemPurpose.None then  exit;
+
+ LargeurMontant:=0;
+ LargeurCheck:=0;
+ Element:=AItem.View.FindDrawable('ValeurVerif');
+ Coche:=TListItemText(Element).Text;
+
+ Element:=AItem.View.FindDrawable('Verifie');
+ TListItemAccessory(Element).Visible:=SameText(Coche,'True');
+ LargeurCheck:=Element.Width;
+
+ Element:=AItem.View.FindDrawable('Montant');
+ LargeurCheck:=Element.Width;
+ LargeurDispo:=ListeEcritures.Width - ListeEcritures.ItemSpaces.Left
+               - ListeEcritures.ItemSpaces.Right - LargeurMontant
+               - LargeurCheck;
+
+ Element:=AItem.View.FindDrawable('Libelle');
+ PositionDebut:=Element.PlaceOffset.Y;
+ Hauteur:=GetTextHeight(TListItemText(Element), LargeurDispo, TListItemText(Element).Text);
+ AItem.Height := Hauteur + Ceil(PositionDebut);
+ Element.Height:= Hauteur ;
+ Element.Width := LargeurDispo;
+end;
+{$ENDREGION}
+
+procedure TFMain.MessageErreur(Texte: String);
+begin
+TexteMessage.Text:=Texte;
+lytMessage.Visible:=True;
+end;
+
+procedure TFMain.SwitchStyleSwitch(Sender: TObject);
+var vstyle : String;
+    aFMXObj : TFMXObject;
+    vColor : TAlphaColor;
+begin
+if SwitchStyle.IsChecked then vstyle:=DarkStyle
+                     else vstyle:=LightStyle;
+if TStyleManager.TrySetStyleFromResource(vStyle)
+                 then TStyleManager.UpdateScenes;
+aFmxObj:=TStyleManager.ActiveStyle(Self).FindStyleResource('listviewstyle.font');
+if assigned(aFmxObj) then
+  begin
+    ListViewFont:=TFontObject(aFMXObj).Font;
+//    showmessage(ListViewFont.Size.ToString);
+  end;
+vColor:=TAlphaColors.Null;
+aFmxObj:=TStyleManager.ActiveStyle(Self).FindStyleResource('labelstyle.text');
+if assigned(aFmxObj) then
+    vColor:=TText(aFmxObj).TextSettings.FontColor;
+aFMXObj:=TStyleManager.ActiveStyle(Self).FindStyleResource('buttonstyle.text');
+if Assigned(aFMXObj) then
+  vColor:=TButtonStyleTextObject(aFmxObj).HotColor;
+CancelPath.Fill.Color:=vColor;
+OkPath.Fill.Color:=vColor;
+end;
+
+
+procedure TFMain.bllLightClick(Sender: TObject);
+begin
+SwitchStyle.IsChecked:=False;
+end;
+
+
+{$REGION 'Clavier virtuel'}
+
 procedure TFMain.CacherClavier(aScrollBox : TScrollBox);
 begin
   aScrollBox.ViewportPosition := PointF(aScrollBox.ViewportPosition.X, 0);
@@ -314,73 +473,6 @@ begin
   if not FNeedOffset then CacherClavier(aScrollbox);
 end;
 
-procedure TFMain.ComboBox1ClosePopup(Sender: TObject);
-begin
- Dm.FDQEcritures.Open('',[dm.tblComptes.FieldByName('id').asInteger]);
-{$IFDEF ANDROID}
-{TODO : à tester
- permettrai (en théorie) de forcer le dessin de la ListView
- pour régler le problème de hauteur d'item variable
- force un redraw ?
- sinon essayer switchstyle}
-ListeEcritures.BeginUpdate;
-ListeEcritures.EndUpdate;
-
-{$ENDIF}
-end;
-
-procedure TFMain.FileExit1CanActionExec(Sender: TCustomAction;
-  var CanExec: Boolean);
-begin
-CanExec:=true;
-Close;
-end;
-
-procedure TFMain.FormCreate(Sender: TObject);
-begin
-
-{Les styles sont chargés à partir de ressources,
- des styles .fsf sont conseillés }
-
-{$IFDEF MSWINDOWS}
- LightStyle:='windowslight';
- DarkStyle:='windowsdark';
-{$ENDIF}
-{$IFDEF ANDROID}
- LightStyle:='androidlight';
- DarkStyle:='androiddark';
-{$ENDIF}
-// todo : menu apple
-Dm.FDQEcritures.Open('',[dm.tblComptes.FieldByName('id').asInteger]);
-Pages.TabIndex:=0;
-
-// application style
-SwitchStyleSwitch(Sender);
-
-// Barre de recherche
-// https://www.developpez.net/forums/blogs/138527-sergiomaster/b6927/fmx-modifier-hauteur-accessoirement-dautres-proprietes-boite-recherche-liste/
-if ListeEcritures.controls[1].ClassType = TSearchBox then
-  begin
-    // hauteur
-    if TSearchBox(ListeEcritures.controls[1]).Height<30 then // certains styles ou cibles proposent une hauteur plus importante
-      TSearchBox(ListeEcritures.controls[1]).Height:=30;
-  end;
-
-end;
-
-procedure TFMain.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
-  Shift: TShiftState);
-begin
-// todo : gestion mobile ? vérifier que vkhardwareback est supporté utile ?
-if (key=vkHardwareBack) AND (Pages.TabIndex>0) then
- begin
-   // permet d'utiliser la touche hardware de retour
-   Pages.First();
-   Key:=0;
- end;
-
-end;
-
 procedure TFMain.FormVirtualKeyboardHidden(Sender: TObject;
   KeyboardVisible: Boolean; const Bounds: TRect);
 var vScrollBox : TScrollBox;
@@ -395,7 +487,6 @@ begin
 FKBBounds.Create(0, 0, 0, 0);
 FNeedOffset := False;
 CacherClavier(vScrollBox);
-
 end;
 
 procedure TFMain.FormVirtualKeyboardShown(Sender: TObject;
@@ -414,73 +505,6 @@ begin
  MontrerClavier(vScrollBox);
 end;
 
-procedure TFMain.ListeEcrituresItemClick(const Sender: TObject;
-  const AItem: TListViewItem);
-begin
- DM.EcritureValidee(DM.FDQEcritures.FieldByName('id').asInteger);
-end;
-
-procedure TFMain.ListeEcrituresUpdateObjects(const Sender: TObject;
-  const AItem: TListViewItem);
-// todo  billet sur les hauteurs variables d'items de liste
-var
-  Element: TListItemDrawable;
-  PositionDebut, LargeurMontant, LargeurCheck : Single;
-  Hauteur : Integer;
-  Coche : String;
-begin
- if AItem.Purpose<>TListItemPurpose.None then exit;
-
- Element:=AItem.View.FindDrawable('Text6');
- Coche:=TListItemText(Element).Text;
-
- Element:=AItem.View.FindDrawable('Verifie');
- TListItemAccessory(Element).Visible:=SameText(Coche,'True');
-
- if assigned(element) then  LargeurCheck:=Element.Width else LargeurCheck:=0;
- Element:=AItem.View.FindDrawable('Montant');
- LargeurCheck:=Element.Width;
- LargeurDispo:=ListeEcritures.Width - ListeEcritures.ItemSpaces.Left
-               - ListeEcritures.ItemSpaces.Right - LargeurMontant
-               - LargeurCheck;
-
- Element:=AItem.View.FindDrawable('Libelle');
- PositionDebut:=Element.PlaceOffset.Y;
- Hauteur:=GetTextHeight(TListItemText(Element), LargeurDispo, TListItemText(Element).Text);
- AItem.Height := Hauteur + Ceil(PositionDebut);
- Element.Height:= Hauteur ;
- Element.Width := LargeurDispo;
-end;
-
-
-procedure TFMain.MessageErreur(Texte: String);
-begin
-TexteMessage.Text:=Texte;
-lytMessage.Visible:=True;
-end;
-
-procedure TFMain.SwitchStyleSwitch(Sender: TObject);
-var vstyle : String;
-    aFMXObj : TFMXObject;
-    vColor : TAlphaColor;
-begin
-if SwitchStyle.IsChecked then vstyle:=DarkStyle
-                     else vstyle:=LightStyle;
-if TStyleManager.TrySetStyleFromResource(vStyle)
-                 then TStyleManager.UpdateScenes;
-
-vColor:=TAlphaColors.Null;
-aFmxObj:=TStyleManager.ActiveStyle(Self).FindStyleResource('labelstyle.text');
-if assigned(aFmxObj) then
-    vColor:=TText(aFmxObj).TextSettings.FontColor;
-aFMXObj:=TStyleManager.ActiveStyle(Self).FindStyleResource('buttonstyle.text');
-if Assigned(aFMXObj) then
-  vColor:=TButtonStyleTextObject(aFmxObj).HotColor;
-CancelPath.Fill.Color:=vColor;
-OkPath.Fill.Color:=vColor;
-end;
-
-
 procedure TFMain.CalcContentBounds(Sender: TObject;
   var ContentBounds: TRectF);
 begin
@@ -491,4 +515,5 @@ begin
   end;
 end;
 
+{$ENDREGION}
 end.

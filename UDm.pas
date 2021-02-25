@@ -11,7 +11,7 @@ uses
   Data.DB, FireDAC.Comp.Client, FireDAC.Stan.Param, FireDAC.DatS,
   FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Comp.DataSet,
   FMX.Listbox, FMX.Types, FMX.Controls, FireDAC.Comp.ScriptCommands,
-  FireDAC.Stan.Util, FireDAC.Comp.Script;
+  FireDAC.Stan.Util, FireDAC.Comp.Script, FireDAC.Phys.SQLiteWrapper.Stat;
 
 type
   TDM = class(TDataModule)
@@ -43,6 +43,7 @@ type
     { Déclarations privées }
   public
     { Déclarations publiques }
+    StringVersion : String;
     procedure AjoutEcriture(const Libelle, sens,SDate: String;
                             const montant: Currency;
                             const compte, categorie: Integer);
@@ -97,42 +98,64 @@ FDQEcritures.Open('');
 end;
 
 procedure TDM.FDCnxcomptesAfterConnect(Sender: TObject);
-var vScript : TFDScript;
+var // vScript : TFDScript;
     version,v : integer;
 begin
-
 {Utilisation d'une spécificité SQLite : user_version}
  version:=FDCnxcomptes.ExecSQlScalar('PRAGMA user_version');
-
+ Stringversion:=Format('Version %d',[version]);
 {Pourquoi un script au runtime ? Pour reprendre à partir d'une version }
-// todo : version sans ce script au runtime, utilisation de  FDScripts.ExecuteScript(FDScripts.SQLScripts[v].SQL);
+// todo : test script sur Android
+// todo : backup database
 
- vScript:=TFDScript.Create(Self);
- try
-   VScript.Connection:=FDCnxcomptes;
-   with vScript.SQlScripts.Add do
-     begin
-       name:='root';
-       for v := version+1 to FDScripts.SQLScripts.Count do
-         SQL.Add(format('@version%d',[v]));
-     end;
-   for v := version+1 to FDScripts.SQLScripts.Count - 1 do
-      begin
-        with vScript.SQLScripts.Add do begin
-          Name := format('version%d',[v+1]);
-          SQL:=FDScripts.SQLScripts[v].SQL;
-        end;
-      end;
-   try
-     FDCnxcomptes.StartTransaction;
-     vScript.ExecuteAll;
-     FDCnxcomptes.Commit;
-   except
-     FDCnxcomptes.Rollback;
-   end;
- finally
-   vScript.Free;
- end;
+for v := version+1 to FDScripts.SQLScripts.Count do
+  begin
+
+    try
+      FDCnxcomptes.StartTransaction;
+      FDScripts.ExecuteScript(FDScripts.SQLScripts[v-1].SQL);
+      FDCnxcomptes.Commit;
+      version:=FDCnxcomptes.ExecSQlScalar('PRAGMA user_version');
+      Stringversion:=Format('Version %d',[version]);
+    except
+        on E: Exception do
+         begin
+           // todo : gérer erreur script
+           FDCnxcomptes.Rollback;
+           break;
+         end;
+    end;
+  end;
+{$REGION 'Autre manière'}
+// vScript:=TFDScript.Create(Self);
+// try
+//   VScript.Connection:=FDCnxcomptes;
+//   // todo : autre que windows nécessite un chemin temporaire (non testé)
+//   vscript.ScriptOptions.DefaultScriptPath:=TPath.GetTempPath;
+//   with vScript.SQlScripts.Add do
+//     begin
+//       name:='root';
+//       for v := version+1 to FDScripts.SQLScripts.Count do
+//         SQL.Add(format('@version%d',[v]));
+//     end;
+//   for v := version+1 to FDScripts.SQLScripts.Count - 1 do
+//      begin
+//        with vScript.SQLScripts.Add do begin
+//          Name := format('version%d',[v+1]);
+//          SQL:=FDScripts.SQLScripts[v].SQL;
+//        end;
+//      end;
+//   try
+//     FDCnxcomptes.StartTransaction;
+//     vScript.ExecuteAll;
+//     FDCnxcomptes.Commit;
+//   except
+//     FDCnxcomptes.Rollback;
+//   end;
+// finally
+//   vScript.Free;
+// end;
+{$ENDREGION}
 end;
 
 procedure TDM.FDCnxcomptesBeforeConnect(Sender: TObject);
