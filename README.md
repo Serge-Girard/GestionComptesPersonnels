@@ -30,9 +30,4 @@ Présenté ici ma vision du programme présenté par Patrick Premartin https://g
 ## version 2 
   - ajout d'un pointage des écritures
   - gestion de version de la base de données (utilisation de PRAGMA user_version)
-
-## En prévision
- - Passage de la liste des écritures en mode édition pour :
-     - Pointer les écritures (case à cocher).
-     - Supprimer des écritures (bouton Delete).
  
